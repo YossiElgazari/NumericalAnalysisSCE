@@ -28,7 +28,7 @@ def checkDiagonal(elmatlist, mat):
                 return i
         return -1
 
-    def switchRows(mat, row1, row2, elMat):
+    def switchRows(mat, row1, row2):
         newmat = buildZeroMatrix(mat, 1)
         for i in range(0, len(mat)):
             if i == row1:
@@ -37,7 +37,8 @@ def checkDiagonal(elmatlist, mat):
                 newmat[i][row1] = 1
             else:
                 newmat[i][i] = 1
-                ##################
+        elmatlist.append(newmat)
+        return MatrixMul(newmat, mat)
 
     for row in range(len(mat)):
         if mat[row][row] == 0:
@@ -45,8 +46,11 @@ def checkDiagonal(elmatlist, mat):
             if rowNum == -1:
                 for i in range(0, row):
                     if mat[i][row] != 0 and mat[row][i] != 0:
-                        ####################
-                #remember to return the matrix
+                        rowNum = i
+                        break
+            mat = switchRows(mat, row, rowNum)
+    return mat
+
 
 def gaussElimination(mat):
     elMatrixlist = []
