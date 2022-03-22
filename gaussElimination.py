@@ -65,7 +65,6 @@ def makePivotOne(matrix, elmatlist):
     return matrix
 
 
-
 def switchRows(mat, row1, row2, elmatlist):
     newmat = buildZeroMatrix(mat, 0)
     for i in range(0, len(mat)):
@@ -77,6 +76,10 @@ def switchRows(mat, row1, row2, elmatlist):
             newmat[i][i] = 1
     elmatlist.append(newmat)
     return matrixMul(newmat, mat)
+
+
+def solveMatrix(mat, sol):
+    pass
 
 
 def checkDiagonal(elmatlist, mat):
