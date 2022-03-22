@@ -99,8 +99,8 @@ def checkDiagonal(elmatlist, mat):
 
 
 def gaussElimination(mat):
-    elMatrixlist = []
-    checkDiagonal(elMatrixlist, mat)
+    elMatrixList = []
+    checkDiagonal(elMatrixList, mat)
     ##########################
 
 
