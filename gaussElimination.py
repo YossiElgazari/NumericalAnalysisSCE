@@ -97,7 +97,6 @@ def switchRows(mat, row1, row2, elmatlist):
 """def solveMatrix(mat, sol):
     pass"""
 
-
 """def checkDiagonal(elmatlist, mat):
     def findValidRow(mat, row):
         for i in range(row + 1, len(mat)):
@@ -124,9 +123,8 @@ def gaussElimination(mat):
     currMat = zeroUnderPivot(currMat, elementaryMatricesList)
     print_matrix(currMat)
     currMat = zeroAbovePivot(currMat, elementaryMatricesList)
-    currMat=makePivotOne(currMat,elementaryMatricesList)
+    currMat = makePivotOne(currMat, elementaryMatricesList)
     print_matrix(currMat)
-
 
     ##########################
 
