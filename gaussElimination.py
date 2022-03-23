@@ -94,8 +94,8 @@ def switchRows(mat, row1, row2, elmatlist):
     return matrixMul(newmat, mat)
 
 
-def solveMatrix(mat, sol):
-    pass
+"""def solveMatrix(mat, sol):
+    pass"""
 
 
 """def checkDiagonal(elmatlist, mat):
