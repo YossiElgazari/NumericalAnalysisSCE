@@ -94,122 +94,48 @@ def switchRows(mat, row1, row2, elmatlist):
     return matrixMul(newmat, mat)
 
 
-def restructureElList(eList):
-    for mat in eList:
-        for row in mat:
-            row.pop()
-
-
 def gaussElimination(mat):
     originalMatrix = eval(repr(mat))  # copy the original matrix
-    elementaryMatricesList = []  # create the elementary matrices list
-    currMat = checkPivotMax(mat, elementaryMatricesList)
-    currMat = zeroUnderPivot(currMat, elementaryMatricesList)
-    currMat = zeroAbovePivot(currMat, elementaryMatricesList)
-    currMat = makePivotOne(currMat, elementaryMatricesList)
-    reversedElist = eval(repr(elementaryMatricesList))
-    reversedElist.reverse()
-    restructureElList(reversedElist)
-    reversedElist.append(originalMatrix)
-    reversedElist.append(currMat)
-    print('The original matrix\n')
-    print_matrix(originalMatrix)
-    print('the solution:\n')
-    print_matrix(currMat)
-    print('Deep dive into the solution')
-    printElementaryMatrices(reversedElist)
-    print('every multiplication step:')
-    elementaryMatricesList.reverse()
-    printEveryStepOfSolution(elementaryMatricesList, mat)
+    elementaryMatrixList = []  # create the elementary matrices list
+    currMat = checkPivotMax(mat, elementaryMatrixList)
+    currMat = zeroUnderPivot(currMat, elementaryMatrixList)
+    currMat = zeroAbovePivot(currMat, elementaryMatrixList)
+    currMat = makePivotOne(currMat, elementaryMatrixList)
+    print_solution(originalMatrix, elementaryMatrixList, currMat)
 
 
-    ##########################
-
-
-def print_matrix(matrix):
+def print_matrix(f, matrix):
     for row in matrix:
         rowString = ''
         for element in row:
             rowString += f'{str(element)} '
-        print(rowString)
-    print('')
+        rowString += '\n'
+        f.write(rowString)
+    f.write('\n')
 
 
-def printElementaryMatrices(elementaryMatricesList):
-    # find the longest integer part size of the number which his integer part is the longest from all the matrices
-    maxNumberOfIntegerDigits = findMaxLengthNumberInElementaryList(elementaryMatricesList)
-    result = ''
-    for currentRow in range(0, len(elementaryMatricesList[0])):  # for every row
-        result += '\n'
-        for currentMatrix in range(0, len(elementaryMatricesList)):  # for every matrix
-            for currCol in range(0, len(elementaryMatricesList[currentMatrix][0])):  # for every element
-                # calculate the current element integer part length
-                currNumOfIntegerDigits = len(str(elementaryMatricesList[currentMatrix][currentRow][currCol]).split('.')[0])
-                if currCol == len(elementaryMatricesList[currentMatrix][0]) - 1:  # if in the last col of a matrix
-                    for _ in range(maxNumberOfIntegerDigits - currNumOfIntegerDigits, 0, -1):
-                        result += ' '
-                    if currentRow == len(elementaryMatricesList[0]) // 2:  # if in the row that is the middle row
-                        if currentMatrix == len(elementaryMatricesList) - 1:  # if in the last matrix of the array
-                            result += f'{elementaryMatricesList[currentMatrix][currentRow][currCol]:.3f}|'
-                        elif currentMatrix == len(elementaryMatricesList) - 2:  # if in the previous to the last matrix
-                            result += f'{elementaryMatricesList[currentMatrix][currentRow][currCol]:.3f}|   =   |'
-                        else:  # another matrix in the array that is not the last or the one before the last
-                            result += f'{elementaryMatricesList[currentMatrix][currentRow][currCol]:.3f}|   X   |'
-                    else:  # if we are in every row that is not the middle row
-                        if currentMatrix == len(elementaryMatricesList) - 1:  # if in the last matrix of the array
-                            result += f'{elementaryMatricesList[currentMatrix][currentRow][currCol]:.3f}|'
-                        else:  # if not the last matrix of the array
-                            result += f'{elementaryMatricesList[currentMatrix][currentRow][currCol]:.3f}|       |'
-                else:  # if it's not the last col of a matrix
-                    if currentMatrix == 0 and currCol == 0:  # if in the first col of the first matrix
-                        result += '|'
-                    for _ in range(maxNumberOfIntegerDigits - currNumOfIntegerDigits, 0, -1):
-                        result += ' '
-                    result += f'{elementaryMatricesList[currentMatrix][currentRow][currCol]:.3f} '
-
-    result += '\n\n'
-    print(result)
+def printmatforsol(f, matrix):
+    for row in matrix:
+        rowString = ''
+        for element in row:
+            rowString += f'{str(element)} '
+        rowString += '\n'
+        f.write(rowString)
 
 
-def findMaxLengthNumberInElementaryList(elementaryMatricesList):
-    """
-    finds the longest integer part size of all the numbers in a list of matrices
-    :param elementaryMatricesList: all the elementary matrices used to reach the solution
-    :return: the size of the longest integer part
-    """
-    maxLength = 0
-    for matrix in elementaryMatricesList:  # for every matrix
-        for row in matrix:  # for every row in the matrix
-            for element in row:  # for every element in the row
-                currLength = len(str(element).split('.')[0])  # calculates the number of digits before the decimal point
-                if currLength > maxLength:
-                    maxLength = currLength
-    return maxLength
+def print_solution(matrix, elmatlist, sol):
+    f = open("solution.txt", 'w')
+    f.write("Original Matrix: \n\n")
+    print_matrix(f, matrix)
+    f.write("Calculating solution: \n\n")
+    elmatlist = list(reversed(elmatlist))
+    for i in range(len(elmatlist)):
+        printmatforsol(f, elmatlist[i])
+        f.write("\n X \n\n")
+    print_matrix(f, matrix)
+    f.write("Solution: \n\n")
+    print_matrix(f, sol)
 
 
-def printEveryStepOfSolution(elementaryMatricesList, matrix):
-    """
-    prints all the multiplication with elementary matrices used in order to reach the solution
-    :param elementaryMatricesList: all the elementary matrices list
-    :param matrix: the original matrix
-    """
-    currMatrix = eval(repr(matrix))  # copy the last matrix
-    while(elementaryMatricesList):  # as long as the list is not empty
-        # currMatrix = eval(repr(matrix))  # copy the last matrix
-        currElementaryMatrix = elementaryMatricesList.pop()  # pop the next elementary matrix fom the list
-        currList = []  # will include [[elementary matrix], [current matrix], [result of the multiplication]]
-        currList.append(currElementaryMatrix)
-        currList.append(currMatrix)
-        # matrix = elementaryMatrix * matrix
-        currMatrix = matrixMul(currElementaryMatrix, currMatrix)
-        currList.append(currMatrix)
-        """for i in range(0, len(matrix)):
-            for j in range(0, len(matrix[0])):
-                matrix[i][j] = calculate_matrix_index(currMatrix, i, j, currElementaryMatrix)
-        currList.append(matrix)  # add the result of the multiplication"""
-        printElementaryMatrices(currList)
-
-
-"""[[3, 15, 3, 7, 37], [11, 9, 2, 8, 55], [2, 5, 3, 7, 1235], [3, 15, 2, 5, 40]]"""
-mat1 = [[0, 1, -1, -1], [3, -1, 1, 4], [1, 1, -2, -3]]
+mat1 = [[1, 1, 1, 6], [0, 2, 5, -4], [2, 5, -1, 27]]
 gaussElimination(mat1)
