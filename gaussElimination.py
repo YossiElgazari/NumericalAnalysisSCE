@@ -94,39 +94,14 @@ def switchRows(mat, row1, row2, elmatlist):
     return matrixMul(newmat, mat)
 
 
-"""def solveMatrix(mat, sol):
-    pass"""
-
-"""def checkDiagonal(elmatlist, mat):
-    def findValidRow(mat, row):
-        for i in range(row + 1, len(mat)):
-            if mat[i][row] != 0:
-                return i
-        return -1
-
-    for row in range(len(mat)):
-        if mat[row][row] == 0:
-            rowNum = findValidRow(mat, row)
-            if rowNum == -1:
-                for i in range(0, row):
-                    if mat[i][row] != 0 and mat[row][i] != 0:
-                        rowNum = i
-                        break
-            mat = switchRows(mat, row, rowNum, elmatlist)
-    return mat"""
-
-
 def gaussElimination(mat):
     originalMatrix = eval(repr(mat))  # copy the original matrix
-    elementaryMatricesList = []  # create the elementary matrices list
-    currMat = checkPivotMax(mat, elementaryMatricesList)
-    currMat = zeroUnderPivot(currMat, elementaryMatricesList)
-    print_matrix(currMat)
-    currMat = zeroAbovePivot(currMat, elementaryMatricesList)
-    currMat = makePivotOne(currMat, elementaryMatricesList)
-    print_matrix(currMat)
-
-    ##########################
+    elementaryMatrixList = []  # create the elementary matrices list
+    currMat = checkPivotMax(mat, elementaryMatrixList)
+    currMat = zeroUnderPivot(currMat, elementaryMatrixList)
+    currMat = zeroAbovePivot(currMat, elementaryMatrixList)
+    currMat = makePivotOne(currMat, elementaryMatrixList)
+    print_solution(originalMatrix, elementaryMatrixList, currMat)
 
 
 def print_matrix(matrix):
@@ -138,7 +113,26 @@ def print_matrix(matrix):
     print('')
 
 
-"""[[3, 15, 3, 7, 37], [11, 9, 2, 8, 55], [2, 5, 3, 7, 1235], [3, 15, 2, 5, 40]]"""
-mat1 = [[0, 1, -1, -1], [3, -1, 1, 4], [1, 1, -2, -3]]
-print_matrix(mat1)
+def printmatforsol(matrix):
+    for row in matrix:
+        rowString = ''
+        for element in row:
+            rowString += f'{str(element)} '
+        print(rowString)
+
+
+def print_solution(matrix, elmatlist, sol):
+    print("Original Matrix: ")
+    print_matrix(matrix)
+    print("Calculating solution: ")
+    elmatlist = list(reversed(elmatlist))
+    for i in range(len(elmatlist)):
+        printmatforsol(elmatlist[i])
+        print(" X ")
+    print_matrix(matrix)
+    print("Solution: ")
+    print_matrix(sol)
+
+
+mat1 = [[1, 1, 1, 6], [0,2,5, -4], [2, 5, -1, 27]]
 gaussElimination(mat1)
