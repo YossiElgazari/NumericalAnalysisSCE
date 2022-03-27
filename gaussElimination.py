@@ -104,35 +104,38 @@ def gaussElimination(mat):
     print_solution(originalMatrix, elementaryMatrixList, currMat)
 
 
-def print_matrix(matrix):
+def print_matrix(f, matrix):
     for row in matrix:
         rowString = ''
         for element in row:
             rowString += f'{str(element)} '
-        print(rowString)
-    print('')
+        rowString += '\n'
+        f.write(rowString)
+    f.write('\n')
 
 
-def printmatforsol(matrix):
+def printmatforsol(f, matrix):
     for row in matrix:
         rowString = ''
         for element in row:
             rowString += f'{str(element)} '
-        print(rowString)
+        rowString += '\n'
+        f.write(rowString)
 
 
 def print_solution(matrix, elmatlist, sol):
-    print("Original Matrix: ")
-    print_matrix(matrix)
-    print("Calculating solution: ")
+    f = open("solution.txt", 'w')
+    f.write("Original Matrix: \n\n")
+    print_matrix(f, matrix)
+    f.write("Calculating solution: \n\n")
     elmatlist = list(reversed(elmatlist))
     for i in range(len(elmatlist)):
-        printmatforsol(elmatlist[i])
-        print(" X ")
-    print_matrix(matrix)
-    print("Solution: ")
-    print_matrix(sol)
+        printmatforsol(f, elmatlist[i])
+        f.write("\n X \n\n")
+    print_matrix(f, matrix)
+    f.write("Solution: \n\n")
+    print_matrix(f, sol)
 
 
-mat1 = [[1, 1, 1, 6], [0,2,5, -4], [2, 5, -1, 27]]
+mat1 = [[1, 1, 1, 6], [0, 2, 5, -4], [2, 5, -1, 27]]
 gaussElimination(mat1)
