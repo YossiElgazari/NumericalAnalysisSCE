@@ -101,41 +101,52 @@ def restructureElList(eList):
 
 
 def gaussElimination(mat):
-    originalMatrix = eval(repr(mat))  # copy the original matrix
-    elementaryMatricesList = []  # create the elementary matrices list
-    currMat = checkPivotMax(mat, elementaryMatricesList)
-    currMat = zeroUnderPivot(currMat, elementaryMatricesList)
-    currMat = zeroAbovePivot(currMat, elementaryMatricesList)
-    currMat = makePivotOne(currMat, elementaryMatricesList)
-    reversedElist = eval(repr(elementaryMatricesList))
-    reversedElist.reverse()
-    restructureElList(reversedElist)
-    reversedElist.append(originalMatrix)
-    reversedElist.append(currMat)
-    print('The original matrix\n')
-    print_matrix(originalMatrix)
-    print('the solution:\n')
-    print_matrix(currMat)
-    print('Deep dive into the solution')
-    printElementaryMatrices(reversedElist)
-    print('every multiplication step:')
-    elementaryMatricesList.reverse()
-    printEveryStepOfSolution(elementaryMatricesList, mat)
+    try:
+        with open('solution.txt', 'w') as f:
+            originalMatrix = eval(repr(mat))  # copy the original matrix
+            elementaryMatricesList = []  # create the elementary matrices list
+            currMat = checkPivotMax(mat, elementaryMatricesList)
+            currMat = zeroUnderPivot(currMat, elementaryMatricesList)
+            currMat = zeroAbovePivot(currMat, elementaryMatricesList)
+            currMat = makePivotOne(currMat, elementaryMatricesList)
+            reversedElist = eval(repr(elementaryMatricesList))
+            reversedElist.reverse()
+            restructureElList(reversedElist)
+            reversedElist.append(originalMatrix)
+            reversedElist.append(currMat)
+            print('The original matrix\n')
+            f.write('The original matrix:\n\n')
+            print_matrix(originalMatrix, f)
+            print('the solution:\n')
+            f.write('the solution:\n\n')
+            print_matrix(currMat, f)
+            print('Deep dive into the solution')
+            f.write('Deep dive into the solution\n\n')
+            printElementaryMatrices(reversedElist, f)
+            print('every multiplication step:')
+            f.write('every multiplication step:\n\n')
+            elementaryMatricesList.reverse()
+            printEveryStepOfSolution(elementaryMatricesList, mat, f)
+    except IOError:
+        print('Error, problem with the output file')
+
 
 
     ##########################
 
 
-def print_matrix(matrix):
+def print_matrix(matrix, f):
     for row in matrix:
         rowString = ''
         for element in row:
             rowString += f'{str(element)} '
         print(rowString)
+        f.write(rowString + '\n')
     print('')
+    f.write('\n')
 
 
-def printElementaryMatrices(elementaryMatricesList):
+def printElementaryMatrices(elementaryMatricesList, f):
     # find the longest integer part size of the number which his integer part is the longest from all the matrices
     maxNumberOfIntegerDigits = findMaxLengthNumberInElementaryList(elementaryMatricesList)
     result = ''
@@ -169,6 +180,7 @@ def printElementaryMatrices(elementaryMatricesList):
 
     result += '\n\n'
     print(result)
+    f.write(result)
 
 
 def findMaxLengthNumberInElementaryList(elementaryMatricesList):
@@ -187,7 +199,7 @@ def findMaxLengthNumberInElementaryList(elementaryMatricesList):
     return maxLength
 
 
-def printEveryStepOfSolution(elementaryMatricesList, matrix):
+def printEveryStepOfSolution(elementaryMatricesList, matrix, f):
     """
     prints all the multiplication with elementary matrices used in order to reach the solution
     :param elementaryMatricesList: all the elementary matrices list
@@ -203,13 +215,11 @@ def printEveryStepOfSolution(elementaryMatricesList, matrix):
         # matrix = elementaryMatrix * matrix
         currMatrix = matrixMul(currElementaryMatrix, currMatrix)
         currList.append(currMatrix)
-        """for i in range(0, len(matrix)):
-            for j in range(0, len(matrix[0])):
-                matrix[i][j] = calculate_matrix_index(currMatrix, i, j, currElementaryMatrix)
-        currList.append(matrix)  # add the result of the multiplication"""
-        printElementaryMatrices(currList)
+        printElementaryMatrices(currList, f)
 
 
 """[[3, 15, 3, 7, 37], [11, 9, 2, 8, 55], [2, 5, 3, 7, 1235], [3, 15, 2, 5, 40]]"""
 mat1 = [[0, 1, -1, -1], [3, -1, 1, 4], [1, 1, -2, -3]]
+#mat2 = [[2, 4, 6, 3, 1], [3, 7, 1, 9, 4], [2, 5, 8, 9, 0], [2, 6, 7, 0, 2]]
 gaussElimination(mat1)
+#gaussElimination(mat2)
