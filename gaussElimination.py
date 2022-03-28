@@ -94,7 +94,7 @@ def matrixMul(mat1, mat2):
         for j in range(len(newmat[0])):
             for k in range(len(newmat)):
                 newmat[i][j] = newmat[i][j] + mat1[i][k] * mat2[k][j]
-            if isclose(newmat[i][j] + 1, round(newmat[i][j]) + 1):
+            if isclose(newmat[i][j] + 1, round(newmat[i][j]) + 1) or isclose(newmat[i][j], round(newmat[i][j])):
                 newmat[i][j] = round(newmat[i][j])
     return newmat
 
