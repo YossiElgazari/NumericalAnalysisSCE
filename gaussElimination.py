@@ -2,7 +2,14 @@ from math import isclose
 
 
 def checkPivotMax(matrix, elmatlist):
-    for row in range(len(matrix)):  # run on every row of the matrix
+    """
+    Moving the maximum number in each column to the right spot
+
+    :param matrix: matrix
+    :param elmatlist: elementary list
+    :return: new matrix
+    """
+    for row in range(len(matrix)):
         max = matrix[row][row]
         index = row
         indexmax = index
@@ -16,6 +23,13 @@ def checkPivotMax(matrix, elmatlist):
 
 
 def zeroUnderPivot(matrix, elmatlist):
+    """
+    Making the numbers below the pivot zero by multiplication of elementary matrices
+
+     :param matrix: matrix
+    :param elmatlist: elementary list
+    :return: new matrix
+    """
     for row in range(len(matrix)):
         pivot = matrix[row][row]
         for col in range(row + 1, len(matrix)):
@@ -29,6 +43,13 @@ def zeroUnderPivot(matrix, elmatlist):
 
 
 def zeroAbovePivot(matrix, elmatlist):
+    """
+    Making the numbers above the pivot zero by multiplication of elementary matrices
+
+    :param matrix: matrix
+    :param elmatlist: elementary list
+    :return: new matrix
+    """
     for col in range(1, len(matrix[0]) - 1):
         for row in range(0, col):
             resetnum = (matrix[row][col] / matrix[col][col]) * -1
@@ -40,6 +61,13 @@ def zeroAbovePivot(matrix, elmatlist):
 
 
 def buildZeroMatrix(matrix, numOfPops):
+    """
+    Create's zero matrix with the same size as matrix and pops the numbers from the end by the number of numOfPops
+
+    :param matrix: matrix
+    :param numOfPops: number of pops
+    :return new matrix
+    """
     temp = eval(repr(matrix))
     zeroMatrix = []
     for row in temp:
@@ -53,6 +81,13 @@ def buildZeroMatrix(matrix, numOfPops):
 
 
 def matrixMul(mat1, mat2):
+    """
+    Multiplication of 2 matrices (mat1 x mat2)
+
+    :param mat1: matrix 1
+    :param mat2: matrix 2
+    :return: new matrix after multiplication
+    """
     newmat = eval(repr(mat1))
     newmat = buildZeroMatrix(newmat, 0)
     for i in range(len(newmat)):
@@ -65,6 +100,12 @@ def matrixMul(mat1, mat2):
 
 
 def createElMat(matrix):
+    """
+    Create matrix at the same size as matrix param
+
+    :param matrix: martix
+    :return: new matrix
+    """
     newmat = buildZeroMatrix(matrix, 0)
     for i in range(0, len(matrix)):
         newmat[i][i] = 1
@@ -72,6 +113,13 @@ def createElMat(matrix):
 
 
 def makePivotOne(matrix, elmatlist):
+    """
+    makes the pivot in each row to num 1
+
+    :param matrix: matrix
+    :param elmatlist: elementary list
+    :return: matrix after multiplication
+    """
     for row in range(len(matrix)):
         if matrix[row][row] != 1:
             elmat = createElMat(matrix)
@@ -82,6 +130,15 @@ def makePivotOne(matrix, elmatlist):
 
 
 def switchRows(mat, row1, row2, elmatlist):
+    """
+    Switching rows in the matrix by multiplying elementary matrix
+
+    :param mat: matrix
+    :param row1: number of row
+    :param row2: number of row
+    :param elmatlist: elementary list
+    :return: matrix after multiplication
+    """
     newmat = buildZeroMatrix(mat, 0)
     for i in range(0, len(mat)):
         if i == row1:
@@ -95,12 +152,21 @@ def switchRows(mat, row1, row2, elmatlist):
 
 
 def restructureElList(eList):
+    """
+    change every matrix in the elementary list to nxn form
+    :param eList: elementary list
+    """
     for mat in eList:
         for row in mat:
             row.pop()
 
 
 def gaussElimination(mat):
+    """
+    algorithm for solving systems of linear equations
+
+    :param mat: matrix
+    """
     try:
         with open('solution.txt', 'w') as f:
             originalMatrix = eval(repr(mat))  # copy the original matrix
@@ -132,10 +198,14 @@ def gaussElimination(mat):
 
 
 
-    ##########################
-
 
 def print_matrix(matrix, f):
+    """
+    prints matrix
+
+    :param matrix: matrix
+    :param f: file object
+    """
     for row in matrix:
         rowString = ''
         for element in row:
@@ -147,7 +217,12 @@ def print_matrix(matrix, f):
 
 
 def printElementaryMatrices(elementaryMatricesList, f):
-    # find the longest integer part size of the number which his integer part is the longest from all the matrices
+    """
+    find the longest integer part size of the number which his integer part is the longest from all the matrices
+
+    :param elementaryMatricesList: List of elementary matrices
+    :param f: file object
+    """
     maxNumberOfIntegerDigits = findMaxLengthNumberInElementaryList(elementaryMatricesList)
     result = ''
     for currentRow in range(0, len(elementaryMatricesList[0])):  # for every row
@@ -218,8 +293,24 @@ def printEveryStepOfSolution(elementaryMatricesList, matrix, f):
         printElementaryMatrices(currList, f)
 
 
-"""[[3, 15, 3, 7, 37], [11, 9, 2, 8, 55], [2, 5, 3, 7, 1235], [3, 15, 2, 5, 40]]"""
-mat1 = [[0, 1, -1, -1], [3, -1, 1, 4], [1, 1, -2, -3]]
-#mat2 = [[2, 4, 6, 3, 1], [3, 7, 1, 9, 4], [2, 5, 8, 9, 0], [2, 6, 7, 0, 2]]
-gaussElimination(mat1)
-#gaussElimination(mat2)
+R = int(input("Enter the number of rows:"))
+C = int(input("Enter the number of columns:"))
+
+# Initialize matrix
+matrix = []
+print("Enter the entries rowwise ( indexes [0,0] [0,1] [0,2] [1,1] ... :")
+
+# For user input
+for i in range(R):  # A for loop for row entries
+    a = []
+    for j in range(C):  # A for loop for column entries
+        a.append(int(input()))
+    matrix.append(a)
+
+# For printing the matrix
+for i in range(R):
+    for j in range(C):
+        print(matrix[i][j], end=" ")
+    print()
+
+gaussElimination(matrix)
