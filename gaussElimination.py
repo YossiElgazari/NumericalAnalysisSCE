@@ -307,10 +307,4 @@ for i in range(R):  # A for loop for row entries
         a.append(int(input()))
     matrix.append(a)
 
-# For printing the matrix
-for i in range(R):
-    for j in range(C):
-        print(matrix[i][j], end=" ")
-    print()
-
 gaussElimination(matrix)
