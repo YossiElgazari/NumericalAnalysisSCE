@@ -304,7 +304,7 @@ print("Enter the entries rowwise ( indexes [0,0] [0,1] [0,2] [1,1] ... :")
 for i in range(R):  # A for loop for row entries
     a = []
     for j in range(C):  # A for loop for column entries
-        a.append(int(input()))
+        a.append(float(input()))
     matrix.append(a)
 
 gaussElimination(matrix)
