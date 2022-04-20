@@ -167,9 +167,6 @@ def yaacobi(matrixA, vectorB):
         print_matrix(solutionvec)
 
 
-
-
-
 def zaidel(matrixA, vectorB):
     pivotmaxmat = makePivotMax(matrixA)
     ismaxdiagonal = checkPivotMax(pivotmaxmat)
@@ -190,13 +187,22 @@ def zaidel(matrixA, vectorB):
             guessvec[i][0] = vectorB[i][0]
             for y in range(len(matrixA)):
                 guessvec[i][0] = guessvec[i][0] - notdiagmat[i][y] * guessvec[y][0]
-            guessvec[i][0] = guessvec[i][0]/diagmat[i][i]
-    print(count)
+            guessvec[i][0] = guessvec[i][0] / diagmat[i][i]
+    if count >= maxiteration:
+        print("The matrix isn't converging")
+    else:
+        if not ismaxdiagonal:
+            print("Although the matrix isn't a max diagonal matrix it does converge")
+        print(f'number of iterations:{count}')
     print_matrix(guessvec)
 
 
-zaidel([[3, -1, 1], [0, 1, -1], [1, 1, -2]], [[4], [-1], [-3]])
-yaacobi([[3, -1, 1], [0, 1, -1], [1, 1, -2]], [[4], [-1], [-3]])
+choice = input("1-Zaidel\n2-Yaacobi\n")
+if (int(choice) == 1):
+    zaidel([[3, -1, 1], [0, 1, -1], [1, 1, -2]], [[4], [-1], [-3]])
+elif (int(choice) == 2):
+    yaacobi([[3, -1, 1], [0, 1, -1], [1, 1, -2]], [[4], [-1], [-3]])
+else:
+    print("wrong input\n")
 
-
-#https://github.com/cullena20/matrix_calculator/blob/main/matrix_calculator.py
+# https://github.com/cullena20/matrix_calculator/blob/main/matrix_calculator.py

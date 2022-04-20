@@ -13,7 +13,7 @@ def checkPivotMax(matrix, elmatlist):
         max = matrix[row][row]
         index = row
         indexmax = index
-        for index in range(row, len(matrix)):
+        for row in range(row, len(matrix)):
             if max < matrix[index][row]:
                 max = matrix[index][row]
                 indexmax = index
