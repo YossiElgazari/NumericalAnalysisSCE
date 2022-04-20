@@ -158,8 +158,16 @@ def yaacobi(matrixA, vectorB):
         for i in range(len(solutionvec)):
             solutionvec[i][0] = solutionvec[i][0] / diagmat[i][i]
         guessvec = eval(repr(solutionvec))
-    print(count)
-    print_matrix(solutionvec)
+    if count >= maxiteration:
+        print("The matrix isn't converging")
+    else:
+        if not ismaxdiagonal:
+            print("Although the matrix isn't a max diagonal matrix it does converge")
+        print(f'number of iterations:{count}')
+        print_matrix(solutionvec)
+
+
+
 
 
 def zaidel(matrixA, vectorB):
