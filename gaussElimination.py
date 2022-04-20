@@ -10,12 +10,13 @@ def checkPivotMax(matrix, elmatlist):
     :return: new matrix
     """
     for row in range(len(matrix)):
-        max = matrix[row][row]
-        index = row
-        indexmax = index
-        for row in range(row, len(matrix)):
-            if max < matrix[index][row]:
-                max = matrix[index][row]
+        max = abs(matrix[row][row])
+        """index = row
+        indexmax = index"""
+        indexmax = row
+        for index in range(row + 1, len(matrix)):
+            if max < abs(matrix[index][row]):
+                max = abs(matrix[index][row])
                 indexmax = index
         if indexmax != row:
             matrix = switchRows(matrix, row, indexmax, elmatlist)
@@ -88,7 +89,8 @@ def matrixMul(mat1, mat2):
     :param mat2: matrix 2
     :return: new matrix after multiplication
     """
-    newmat = eval(repr(mat1))
+
+    newmat = eval(repr(mat2))
     newmat = buildZeroMatrix(newmat, 0)
     for i in range(len(newmat)):
         for j in range(len(newmat[0])):
@@ -139,6 +141,8 @@ def switchRows(mat, row1, row2, elmatlist):
     :param elmatlist: elementary list
     :return: matrix after multiplication
     """
+    print("row to switch 1: " + str(row1))
+    print("row to switch 2: " + str(row2))
     newmat = buildZeroMatrix(mat, 0)
     for i in range(0, len(mat)):
         if i == row1:
@@ -284,6 +288,8 @@ def printEveryStepOfSolution(elementaryMatricesList, matrix, f):
     while(elementaryMatricesList):  # as long as the list is not empty
         # currMatrix = eval(repr(matrix))  # copy the last matrix
         currElementaryMatrix = elementaryMatricesList.pop()  # pop the next elementary matrix fom the list
+        for row in currElementaryMatrix:  # for every row in the elementary matrix
+            row.pop()  # remove the redundant 0 in the end
         currList = []  # will include [[elementary matrix], [current matrix], [result of the multiplication]]
         currList.append(currElementaryMatrix)
         currList.append(currMatrix)
@@ -293,7 +299,7 @@ def printEveryStepOfSolution(elementaryMatricesList, matrix, f):
         printElementaryMatrices(currList, f)
 
 
-R = int(input("Enter the number of rows:"))
+"""R = int(input("Enter the number of rows:"))
 C = int(input("Enter the number of columns:"))
 
 # Initialize matrix
@@ -305,6 +311,13 @@ for i in range(R):  # A for loop for row entries
     a = []
     for j in range(C):  # A for loop for column entries
         a.append(float(input()))
-    matrix.append(a)
+    matrix.append(a)"""
+"""
+0  1 -1  -1     3 -1  2  4
+3 -1  2   4     1  2 -1 -3
+1  2 -1  -3     0  1 -1 -1
+"""
 
+matrix = [[0, 1, -1, -1], [3, -1, 1, 4], [1, 1, -2, -3]]
+matrix2 = [[0, 1, -1, -1], [3, -1, 2, 4], [1, 2, -1, -3]]
 gaussElimination(matrix)
