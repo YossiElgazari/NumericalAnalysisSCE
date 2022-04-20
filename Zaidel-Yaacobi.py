@@ -1,9 +1,8 @@
-from math import isclose
 
 
 def makePivotMax(matrix):
     """
-    Moving the maximum number in each column to the right spot
+    Moving the maximum number in each column to be on the diagonal
 
     :param matrix: matrix
     :return: new matrix
@@ -23,10 +22,10 @@ def makePivotMax(matrix):
 
 def checkPivotMax(matrix):
     """
-    Checking if diagonal in matrix is max
+    Checks if the matrix is a dominant diagonal matrix
 
     :param matrix: matrix
-    :return: if diagonal is max
+    :return: if matrix is dominant diagonal matrix
     """
     for row in range(len(matrix)):
         currentSum = 0
@@ -63,7 +62,6 @@ def print_matrix(matrix):
     prints matrix
 
     :param matrix: matrix
-    :param f: file object
     """
     for row in matrix:
         rowString = ''
@@ -74,11 +72,24 @@ def print_matrix(matrix):
 
 
 def empty_matrix(row, col):
+    """
+    creates a zero matrix of size row x col
+
+    :param row: number of rows
+    :param col: number of columns
+    :return: zero matrix of size row x col
+    """
     matrix = [[0 for _ in range(col)] for _ in range(row)]
     return matrix
 
 
 def putZeroInDiagonal(matrix):
+    """
+    creates a matrix similar to 'matrix' except the diagonal is filled with zeroes
+
+    :param matrix: the matrix to copy
+    :return: copy of 'matrix' except the diagonal filled with zeroes.
+    """
     newMatrix = eval(repr(matrix))
     for row in range(len(matrix)):
         newMatrix[row][row] = 0
@@ -86,6 +97,12 @@ def putZeroInDiagonal(matrix):
 
 
 def putZeroExceptDiagonal(matrix):
+    """
+    creates a matrix similar to 'matrix' except every element that is not on the diagonal is zero
+
+    :param matrix: the matrix to copy
+    :return: copy of 'matrix' except every element that is not on the diagonal is zero
+    """
     newMatrix = eval(repr(matrix))
     for row in range(len(matrix)):
         for col in range(len(matrix[0])):
@@ -95,6 +112,14 @@ def putZeroExceptDiagonal(matrix):
 
 
 def multiply_matrices(matrix1, matrix2):
+    """
+    gets 2 matrices of size MxK and KxN, returns a new matrix of size MxN that is the result of the 2 matrices
+    multiplication (matrix 1 * matrix 2).
+
+    :param matrix1:matrix of size MxK
+    :param matrix2: matrix of size KxN
+    :return: new matrix of size MxN
+    """
     row1, col1 = len(matrix1), len(matrix1[0])
     row2, col2 = len(matrix2), len(matrix2[0])
     if col1 == row2:
@@ -112,6 +137,14 @@ def multiply_matrices(matrix1, matrix2):
 
 
 def add_matrices(matrix1, matrix2):
+    """
+    gets 2 matrices of size NxN, returns a new matrix of size NxN that is the result of the 2 matrices
+    summation (matrix 1 + matrix 2).
+
+    :param matrix1: matrix of size NxN
+    :param matrix2: matrix of size NxN
+    :return:
+    """
     row1, col1 = len(matrix1), len(matrix1[0])
     row2, col2 = len(matrix2), len(matrix2[0])
     if row1 == row2 and col1 == col2:
@@ -122,6 +155,14 @@ def add_matrices(matrix1, matrix2):
 
 
 def sub_matrices(matrix1, matrix2):
+    """
+        gets 2 matrices of size NxN, returns a new matrix of size NxN that is the result of the 2 matrices
+        subtraction (matrix 1 - matrix 2).
+
+        :param matrix1: matrix of size NxN
+        :param matrix2: matrix of size NxN
+        :return:
+        """
     row1, col1 = len(matrix1), len(matrix1[0])
     row2, col2 = len(matrix2), len(matrix2[0])
     if row1 == row2 and col1 == col2:
@@ -132,6 +173,13 @@ def sub_matrices(matrix1, matrix2):
 
 
 def checkclose(mat1, mat2):
+    """
+    gets 2 col vectors of same size, checks if they are identical with error range of maximum 0.00001
+
+    :param mat1: the first col vector
+    :param mat2: the second col vector
+    :return: true if the vectors are identical(with error range of 0.00001), false otherwise
+    """
     for i in range(len(mat1)):
         if abs(mat1[i][0] - mat2[i][0]) > 0.00001:
             return False
@@ -139,69 +187,119 @@ def checkclose(mat1, mat2):
 
 
 def yaacobi(matrixA, vectorB):
+    """
+    finds the solution (if there is one) for a system of equations with n variables and n equations if a form of
+    a matrix by Jacobi method (Iterative Methods) calculations
+
+    :param matrixA: the variables coefficients matrix (NxN)
+    :param vectorB: the solution column (Nx1)
+    :return: the solution if there is one, otherwise informs the user that there is no solution
+    """
+    # rearranges the matrix so the max element in every column will be on the diagonal
     pivotmaxmat = makePivotMax(matrixA)
+    # checks if the matrix is a dominant diagonal matrix
     ismaxdiagonal = checkPivotMax(pivotmaxmat)
     if not ismaxdiagonal:
-        print("No dominant diagonal")
+        print("The matrix is not a dominant diagonal matrix")
     maxiteration = 1000
+    # creates a copy of the matrix in size NxN and places 0 in every element that is not on the diagonal
     notdiagmat = putZeroInDiagonal(pivotmaxmat)
+    # creates a copy of the matrix in size NxN and places 0 in every element that is on the diagonal
     diagmat = putZeroExceptDiagonal(pivotmaxmat)
+    # initialize guess vector to the zero col vector
     guessvec = empty_matrix(len(matrixA), 1)
+    # initialize solution vector to be the guess vector except the first element is 1
     solutionvec = eval(repr(guessvec))
     solutionvec[0][0] = 1
     prevGuessVector = eval(repr(solutionvec))
-    count = 0
-    while not checkclose(guessvec, prevGuessVector) and (ismaxdiagonal or count < maxiteration):
+    currNumOfIterations = 0
+    # start jacobi method calculation
+    while not checkclose(guessvec, prevGuessVector) and (ismaxdiagonal or currNumOfIterations < maxiteration):
+        # the guess vector is now our previous guess vector
         prevGuessVector = eval(repr(guessvec))
-        count = count + 1
+        currNumOfIterations = currNumOfIterations + 1
+        result = f'run number {currNumOfIterations}: '
+        # calculate the next guess vector by jacobi method calculation
         solutionvec = sub_matrices(vectorB, multiply_matrices(notdiagmat, guessvec))
         for i in range(len(solutionvec)):
             solutionvec[i][0] = solutionvec[i][0] / diagmat[i][i]
+            result += f' {solutionvec[i][0]}'
         guessvec = eval(repr(solutionvec))
-    if count >= maxiteration:
+        print(result)
+    # if the number of iteration reached to the maximum amount of iterations and the matrix is not a diagonal matrix
+    if currNumOfIterations >= maxiteration and not ismaxdiagonal:
         print("The matrix isn't converging")
+    # if there is a solution
     else:
         if not ismaxdiagonal:
             print("Although the matrix isn't a max diagonal matrix it does converge")
-        print(f'number of iterations:{count}')
+        print(f'number of iterations:{currNumOfIterations}')
         print_matrix(solutionvec)
 
 
 def zaidel(matrixA, vectorB):
+    """
+        finds the solution (if there is one) for a system of equations with n variables and n equations if a form of
+        a matrix by Gauss Seidel method calculations
+
+        :param matrixA: the variables coefficients matrix (NxN)
+        :param vectorB: the solution column (Nx1)
+        :return: the solution if there is one, otherwise informs the user that there is no solution
+        """
+    # rearranges the matrix so the max element in every column will be on the diagonal
     pivotmaxmat = makePivotMax(matrixA)
-    ismaxdiagonal = checkPivotMax(pivotmaxmat)
-    if not ismaxdiagonal:
+    # checks if the matrix is a dominant diagonal matrix
+    isDominantDiagonalMatrix = checkPivotMax(pivotmaxmat)
+    if not isDominantDiagonalMatrix:
         print("No dominant diagonal")
     maxiteration = 1000
+    # creates a copy of the matrix in size NxN and places 0 in every element that is not on the diagonal
     notdiagmat = putZeroInDiagonal(pivotmaxmat)
+    # creates a copy of the matrix in size NxN and places 0 in every element that is on the diagonal
     diagmat = putZeroExceptDiagonal(pivotmaxmat)
+    # initialize guess vector to the zero col vector
     guessvec = empty_matrix(len(matrixA), 1)
+    # initialize solution vector to be the guess vector except the first element is 1
     solutionvec = eval(repr(guessvec))
     solutionvec[0][0] = 1
     prevGuessVector = eval(repr(solutionvec))
-    count = 0
-    while not checkclose(guessvec, prevGuessVector) and (ismaxdiagonal or count < maxiteration):
+    currNumOfIterations = 0
+    # start Gauss Seidel method calculation
+    while not checkclose(guessvec, prevGuessVector) and (isDominantDiagonalMatrix or currNumOfIterations < maxiteration):
+        # the guess vector is now our previous guess vector
         prevGuessVector = eval(repr(guessvec))
-        count += 1
+        currNumOfIterations += 1
+        updatingGuessVector = eval(repr(guessvec))
+        result = f'run number {currNumOfIterations}: '
+        # calculate the next guess vector by Gauss Seidel method calculation
         for i in range(len(guessvec)):
             guessvec[i][0] = vectorB[i][0]
             for y in range(len(matrixA)):
-                guessvec[i][0] = guessvec[i][0] - notdiagmat[i][y] * guessvec[y][0]
+                """guessvec[i][0] = guessvec[i][0] - notdiagmat[i][y] * guessvec[y][0]"""
+                guessvec[i][0] = guessvec[i][0] - notdiagmat[i][y] * updatingGuessVector[y][0]
             guessvec[i][0] = guessvec[i][0] / diagmat[i][i]
-    if count >= maxiteration:
+            updatingGuessVector[i][0] = guessvec[i][0]
+            result += f' {updatingGuessVector[i][0]}'
+        print(result)
+    # if the number of iteration reached to the maximum amount of iterations and the matrix is not a diagonal matrix
+    if currNumOfIterations >= maxiteration and not isDominantDiagonalMatrix:
         print("The matrix isn't converging")
+    # if there is a solution
     else:
-        if not ismaxdiagonal:
+        if not isDominantDiagonalMatrix:
             print("Although the matrix isn't a max diagonal matrix it does converge")
-        print(f'number of iterations:{count}')
+        print(f'number of iterations:{currNumOfIterations}')
         print_matrix(guessvec)
 
 
-matrixA = [[4, 2, 0], [2, 10, 4], [0, 4, 5]]
-vectorB = [[2], [6], [5]]
-
-
 def userMenuForJacobiAndGauss(matrix, vector_b):
+    """
+    presents the user with a menu that lets him choose between the Jacobi method and the Gauss Seidel method for solving
+    a system of equations in a form of a matrix.
+
+    param matrixA: the variables coefficients matrix (NxN)
+    param vectorB: the solution column (Nx1)
+    """
     while True:
         print('1. Gauss Seidel Method')
         print('2. Jacobi Method')
@@ -217,6 +315,8 @@ def userMenuForJacobiAndGauss(matrix, vector_b):
             print('Error, Unknown input')
 
 
+matrixA = [[4, 2, 0], [2, 10, 4], [0, 4, 5]]
+vectorB = [[2], [6], [5]]
 userMenuForJacobiAndGauss(matrixA, vectorB)
 
 # https://github.com/cullena20/matrix_calculator/blob/main/matrix_calculator.py
