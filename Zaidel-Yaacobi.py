@@ -197,13 +197,8 @@ def zaidel(matrixA, vectorB):
         print_matrix(guessvec)
 
 
-choice = input("1-Zaidel\n2-Yaacobi\n")
-if (int(choice) == 1):
-    zaidel([[3, -1, 1], [0, 1, -1], [1, 1, -2]], [[4], [-1], [-3]])
-elif (int(choice) == 2):
-    yaacobi([[3, -1, 1], [0, 1, -1], [1, 1, -2]], [[4], [-1], [-3]])
-else:
-    print("wrong input\n")
+matrixA = [[4, 2, 0], [2, 10, 4], [0, 4, 5]]
+vectorB = [[2], [6], [5]]
 
 
 def userMenuForJacobiAndGauss(matrix, vector_b):
@@ -220,5 +215,8 @@ def userMenuForJacobiAndGauss(matrix, vector_b):
             break
         else:
             print('Error, Unknown input')
+
+
+userMenuForJacobiAndGauss(matrixA, vectorB)
 
 # https://github.com/cullena20/matrix_calculator/blob/main/matrix_calculator.py
