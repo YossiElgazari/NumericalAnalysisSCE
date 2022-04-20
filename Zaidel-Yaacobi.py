@@ -194,7 +194,7 @@ def zaidel(matrixA, vectorB):
         if not ismaxdiagonal:
             print("Although the matrix isn't a max diagonal matrix it does converge")
         print(f'number of iterations:{count}')
-    print_matrix(guessvec)
+        print_matrix(guessvec)
 
 
 choice = input("1-Zaidel\n2-Yaacobi\n")
