@@ -205,4 +205,20 @@ elif (int(choice) == 2):
 else:
     print("wrong input\n")
 
+
+def userMenuForJacobiAndGauss(matrix, vector_b):
+    while True:
+        print('1. Gauss Seidel Method')
+        print('2. Jacobi Method')
+        print('3. Exit')
+        userChoice = input('Please choose which method to use:')
+        if userChoice == '1':
+            zaidel(matrix, vector_b)
+        elif userChoice == '2':
+            yaacobi(matrix, vector_b)
+        elif userChoice == '3':
+            break
+        else:
+            print('Error, Unknown input')
+
 # https://github.com/cullena20/matrix_calculator/blob/main/matrix_calculator.py
