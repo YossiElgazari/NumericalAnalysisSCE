@@ -1,5 +1,3 @@
-
-
 def makePivotMax(matrix):
     """
     Moving the maximum number in each column to be on the diagonal
@@ -265,7 +263,8 @@ def zaidel(matrixA, vectorB):
     prevGuessVector = eval(repr(solutionvec))
     currNumOfIterations = 0
     # start Gauss Seidel method calculation
-    while not checkclose(guessvec, prevGuessVector) and (isDominantDiagonalMatrix or currNumOfIterations < maxiteration):
+    while not checkclose(guessvec, prevGuessVector) and (
+            isDominantDiagonalMatrix or currNumOfIterations < maxiteration):
         # the guess vector is now our previous guess vector
         prevGuessVector = eval(repr(guessvec))
         currNumOfIterations += 1
@@ -297,8 +296,8 @@ def userMenuForJacobiAndGauss(matrix, vector_b):
     presents the user with a menu that lets him choose between the Jacobi method and the Gauss Seidel method for solving
     a system of equations in a form of a matrix.
 
-    param matrixA: the variables coefficients matrix (NxN)
-    param vectorB: the solution column (Nx1)
+    :param matrix: the variables coefficients matrix (NxN)
+    :param vector_b: the solution column (Nx1)
     """
     while True:
         print('1. Gauss Seidel Method')
