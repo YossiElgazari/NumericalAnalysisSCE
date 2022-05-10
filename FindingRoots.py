@@ -13,19 +13,22 @@ def bisection_method(poli, start_point, end_point, ep=0.0001):
     x = sp.symbols('x')
     f = lambdify(x, poli)
     count = 0
+    m = 0
     error = -1 * (ln((ep / (end_point - start_point))) / ln(2))
+    print(float(error))
     error = math.ceil(error)
-    error=100
-    while abs(end_point - start_point) > ep and count < error:
+    print(error)
+    error = 100
+    while abs(end_point - start_point) > ep and count <= error:
         count += 1
         m = start_point + (end_point - start_point) / 2
         if f(start_point) * f(m) < 0:
             end_point = m
         else:
             start_point = m
-    if count>= error:
-        return None,count
-    return round(m,2), count
+    if count > error:
+        return None, count
+    return round(m, 2), count
 
 
 def newton_raphson(poli, start_point, end_point, ep=0.0001):
@@ -49,10 +52,10 @@ def newton_raphson(poli, start_point, end_point, ep=0.0001):
             xrr = xr - (f(xr) / ftag(xr))
         except ZeroDivisionError:
             print("Division by zero!")
-            return None,0
-    if count>= error:
-        return None,count
-    return round(Float(str(xrr)),2), count
+            return None, 0
+    if count >= error:
+        return None, count
+    return round(Float(str(xrr)), 2), count
 
 
 def secant_method(poli, start_point, end_point, ep=0.0001):
@@ -72,10 +75,10 @@ def secant_method(poli, start_point, end_point, ep=0.0001):
             xrrr = (xr * f(xrr) - xrr * f(xr)) / (f(xrr) - f(xr))
         except ZeroDivisionError:
             print("Division by zero!")
-            return None,0
-    if count>= error:
-        return None,count
-    return round(Float(str(xrrr)),2), count
+            return None, 0
+    if count >= error:
+        return None, count
+    return round(Float(str(xrrr)), 2), count
 
 
 def getMash(leftBoundary, rightBoundary, numOfMashes):
@@ -151,8 +154,3 @@ def main():
             print(solution)
     print("goodbye")
 
-#x**3−10.1*x**2−22.2747*x+162.183276
-
-main()
-# x = sp.symbols('x')
-# print(newton_raphson(x ** 2 + x - 2, 0.9, 1.1))
