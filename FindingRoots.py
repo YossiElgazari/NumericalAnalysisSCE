@@ -151,6 +151,19 @@ def main():
                 if newp(startpoint) == 0:
                     solution.append((startpoint, 0))
                 startpoint += 0.1
-            print(solution)
+            printSolution(solution)
     print("goodbye")
 
+
+def printSolution(solutions):
+    count = 1
+    for solution in solutions:
+        string = f'solution {count}: {solution[0]}, number of iterations for finding root: {solution[1]}'
+        if solution[1] == 0:
+            string += ', found by borders assignment in function'
+        print(string + '\n')
+
+
+
+
+main()
