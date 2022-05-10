@@ -4,7 +4,7 @@
 
 import sympy
 import sympy as sp
-from sympy import ln
+from sympy import ln, Float
 from sympy.utilities.lambdify import lambdify
 import math
 
@@ -14,7 +14,8 @@ def bisection_method(poli, start_point, end_point, ep=0.0001):
     f = lambdify(x, poli)
     count = 0
     error = -1 * (ln((ep / (end_point - start_point))) / ln(2))
-    error = 100
+    error = math.ceil(error)
+    error=100
     while abs(end_point - start_point) > ep and count < error:
         count += 1
         m = start_point + (end_point - start_point) / 2
@@ -22,7 +23,9 @@ def bisection_method(poli, start_point, end_point, ep=0.0001):
             end_point = m
         else:
             start_point = m
-    return m, count
+    if count>= error:
+        return None,count
+    return round(m,2), count
 
 
 def newton_raphson(poli, start_point, end_point, ep=0.0001):
@@ -46,8 +49,10 @@ def newton_raphson(poli, start_point, end_point, ep=0.0001):
             xrr = xr - (f(xr) / ftag(xr))
         except ZeroDivisionError:
             print("Division by zero!")
-            return None
-    return xrr, count
+            return None,0
+    if count>= error:
+        return None,count
+    return round(Float(str(xrr)),2), count
 
 
 def secant_method(poli, start_point, end_point, ep=0.0001):
@@ -67,8 +72,10 @@ def secant_method(poli, start_point, end_point, ep=0.0001):
             xrrr = (xr * f(xrr) - xrr * f(xr)) / (f(xrr) - f(xr))
         except ZeroDivisionError:
             print("Division by zero!")
-            return None
-    return xrrr, count
+            return None,0
+    if count>= error:
+        return None,count
+    return round(Float(str(xrrr)),2), count
 
 
 def getMash(leftBoundary, rightBoundary, numOfMashes):
@@ -92,15 +99,15 @@ def divide(polinom, choice, mash, ep=0.00000001):
         if f(border[0]) * f(border[1]) < 0:
             if choice == 1:
                 sol, count = bisection_method(polinom, border[0], border[1], ep)
-                if abs(f(sol)) <= ep:
+                if sol is not None:
                     solution.add((sol, count))
             elif choice == 2:
                 sol, count = newton_raphson(polinom, border[0], border[1], ep)
-                if abs(f(sol)) <= ep:
+                if sol is not None:
                     solution.add((sol, count))
             elif choice == 3:
                 sol, count = secant_method(polinom, border[0], border[1], ep)
-                if abs(f(sol)) <= ep:
+                if sol is not None:
                     solution.add((sol, count))
 
     for border in mash:
