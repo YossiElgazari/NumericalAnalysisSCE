@@ -16,10 +16,7 @@ def bisection_method(poli, start_point, end_point, ep=0.0001):
     count = 0
     m = 0
     error = -1 * (ln((ep / (end_point - start_point))) / ln(2))
-    print(float(error))
     error = math.ceil(error)
-    print(error)
-    error = 100
     while abs(end_point - start_point) > ep and count <= error:
         count += 1
         m = start_point + (end_point - start_point) / 2
@@ -95,7 +92,7 @@ def getMash(leftBoundary, rightBoundary, numOfMashes):
     return mash
 
 
-def divide(polinom, choice, mash, ep=0.00000001):
+def divide(polinom, choice, mash, ep=0.0001):
     solution = set()
     x = sp.symbols('x')
     f = lambdify(x, polinom)
