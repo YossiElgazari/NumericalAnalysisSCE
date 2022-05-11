@@ -4,6 +4,7 @@
 
 import sympy
 import sympy as sp
+from mpmath.libmp.backend import xrange
 from sympy import ln, Float
 from sympy.utilities.lambdify import lambdify
 import math
@@ -86,11 +87,11 @@ def getMash(leftBoundary, rightBoundary, numOfMashes):
     subBoundary = (rightBoundary - leftBoundary) / numOfMashes
     mash.append([leftBoundary, leftBoundary + subBoundary])
     for index in range(numOfMashes - 2):
-        mash.append([mash[index][1], mash[index][1] + subBoundary])
+        mash.append([round(mash[index][1],1), round(mash[index][1] + subBoundary,1)])
     mash.append([mash[numOfMashes - 2][1], rightBoundary])
-    for x in mash:
-        x[0] = round(x[0], 1)
-        x[1] = round(x[1], 1)
+    for each in mash:
+        each[0] = round(each[0],1)
+        each[1] = round(each[1],1)
     return mash
 
 
@@ -145,7 +146,7 @@ def main():
             solution2 = divide(sp.diff(p, x), choice, mash)
             newp = lambdify(x, p)
             for sol in solution2:
-                if newp(sol[0]) == 0:
+                if newp(sol[0]) == 0 and sol[0] != 0:
                     solution.append(sol)
             while startpoint <= endpoint:
                 if newp(startpoint) == 0:
@@ -157,13 +158,13 @@ def main():
 
 def printSolution(solutions):
     count = 1
+    string = ""
     for solution in solutions:
         string = f'solution {count}: {solution[0]}, number of iterations for finding root: {solution[1]}'
         if solution[1] == 0:
             string += ', found by borders assignment in function'
+        count += 1
         print(string + '\n')
-
-
 
 
 main()
