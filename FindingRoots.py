@@ -43,7 +43,7 @@ def newton_raphson(poli, start_point, end_point, ep=0.0001):
     except ZeroDivisionError:
         print("Division by zero!")
         return None
-    while abs(xr - xrr) > ep and count < error:
+    while abs(xr - xrr) > ep and count <= error:
         count += 1
         xr = xrr
         try:
@@ -65,7 +65,7 @@ def secant_method(poli, start_point, end_point, ep=0.0001):
     xr = start_point
     xrr = end_point
     xrrr = (xr * f(xrr) - xrr * f(xr)) / (f(xrr) - f(xr))
-    while abs(xrrr - xrr) > ep and count < error:
+    while abs(xrrr - xrr) > ep and count <= error:
         count += 1
         xr = xrr
         xrr = xrrr
@@ -84,11 +84,11 @@ def getMash(leftBoundary, rightBoundary, numOfMashes):
     subBoundary = (rightBoundary - leftBoundary) / numOfMashes
     mash.append([leftBoundary, leftBoundary + subBoundary])
     for index in range(numOfMashes - 2):
-        mash.append([round(mash[index][1],1), round(mash[index][1] + subBoundary,1)])
+        mash.append([round(mash[index][1], 1), round(mash[index][1] + subBoundary, 1)])
     mash.append([mash[numOfMashes - 2][1], rightBoundary])
     for each in mash:
-        each[0] = round(each[0],1)
-        each[1] = round(each[1],1)
+        each[0] = round(each[0], 1)
+        each[1] = round(each[1], 1)
     return mash
 
 
@@ -116,13 +116,12 @@ def divide(polinom, choice, mash, ep=0.0001):
             solution.add((border[0], 0))
         if abs(f(border[1])) <= ep:
             solution.add((border[1], 0))
-    return list(solution)
+    return solution
 
 
 def main():
     x = sp.symbols('x')
-    temp = input("enter your polynom\n")
-    p = sympy.parsing.sympy_parser.parse_expr(temp)
+    p = x ** 3 - 57.4 * x ** 2 - 3178.4564 * x + 182471.6148  ##### ENTER POLYNOM HERE #####
     startpoint = float(input("enter the bottom limit\n"))
     endpoint = float(input("enter the upper limit\n"))
     numberofcuts = int(abs(endpoint - startpoint) * 10)
@@ -144,11 +143,12 @@ def main():
             newp = lambdify(x, p)
             for sol in solution2:
                 if newp(sol[0]) == 0 and sol[0] != 0:
-                    solution.append(sol)
+                    solution.add(sol)
             while startpoint <= endpoint:
                 if newp(startpoint) == 0:
-                    solution.append((startpoint, 0))
-                startpoint += 0.1
+                    solution.add((startpoint, 0))
+                startpoint = round(startpoint + 0.1, 1)
+            solution = list(solution)
             printSolution(solution)
     print("goodbye")
 
