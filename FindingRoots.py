@@ -136,7 +136,6 @@ def activateIterativeMethod(polinom, method, mash, ep=0.0001):
     :param ep: the maximum calculation error.
     :return: the roots of the polynomial in the given range.
     """
-    print(type(method))
     solution = set()
     x = sp.symbols('x')
     f = lambdify(x, polinom)
@@ -159,7 +158,7 @@ def main():
         '1': bisection_method,
         '2': newton_raphson,
         '3': secant_method}
-    p = x ** 3 - 57.4 * x ** 2 - 3178.4564 * x + 182471.6148  ##### ENTER POLYNOM HERE #####
+    p = x**2+2*x-1 # <<<<<<<<<<<<<<<<<<<< ENTER POLYNOMIAL HERE
     startpoint = float(input("enter the bottom limit\n"))
     endpoint = float(input("enter the upper limit\n"))
     numberofcuts = int(abs(endpoint - startpoint) * 10)
@@ -167,7 +166,7 @@ def main():
     choice = -1
     while choice != '4':
         choice = input(
-            "1- solve with bisection methon \n"
+            "1- solve with bisection method \n"
             "2- solve with newton rapson method \n"
             "3- solve with secant method \n"
             "4- exit the program\n ")
@@ -190,9 +189,9 @@ def main():
                 if abs(newp(border[1])) <= epsilon:
                     solution.add((border[1], 0))
             solution = list(solution)
-            print(solution)
             printSolution(solution)
     print("goodbye")
+
 
 # [0.1, 0.2] [0.2, 0.3] [0.3, 0.4]
 
@@ -204,16 +203,18 @@ def printSolution(solutions):
     :param solutions: list of solutions, each solution is a tuple holding a root of the polynomial and the number
     of iterations it took the iterative method to find the root.
     """
-    count = 1
+    count = 0
     string = ""
     if len(solutions) == 0:
         print("Did not find any roots between the given boundaries")
     for solution in solutions:
-        string = f'solution {count}: {solution[0]}, number of iterations for finding root: {solution[1]}'
+        count += 1
+        string = "solution {0}: {1}, number of iterations for finding root: {2}".format(count, solution[0],
+                                                                                        solution[1])
         if solution[1] == 0:
             string += ', found by borders assignment in function'
-        count += 1
-        print(string + '\n')
+        print(string)
+    print()
 
 
 main()
