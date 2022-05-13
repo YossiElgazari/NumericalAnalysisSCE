@@ -11,7 +11,6 @@ import math
 
 
 def bisection_method(poli, start_point, end_point, ep=0.0001):
-
     """
     Searches for a root of the polynomial given between x values: start point and end point by the bisection method.
 
@@ -75,7 +74,7 @@ def newton_raphson(poli, start_point, end_point, ep=0.0001):
             print("Division by zero!")
             return None, 0
     # if a root was not found
-    if numOfIterations >= maxNumOfIterations:
+    if numOfIterations > maxNumOfIterations:
         return None, numOfIterations
     return round(Float(str(xrr)), 5), numOfIterations
 
@@ -109,7 +108,7 @@ def secant_method(poli, start_point, end_point, ep=0.0001):
             print("Division by zero!")
             return None, 0
     # if a root was not found
-    if numOfIterations >= maxNumOfIterations:
+    if numOfIterations > maxNumOfIterations:
         return None, numOfIterations
     return round(Float(str(xrrr)), 5), numOfIterations
 
@@ -188,7 +187,7 @@ def main():
         '2': newton_raphson,
         '3': secant_method}
     # TODO: ↓ ENTER POLYNOMIAL HERE ↓.
-    p = x**6 -3*x**5 -6*x**4 + 10*x**3 + 21*x**2 + 9*x
+    p = x ** 6 - 3 * x ** 5 - 6 * x ** 4 + 10 * x ** 3 + 21 * x ** 2 + 9 * x
     # get range from user
     startpoint = float(input("enter the bottom limit\n"))
     endpoint = float(input("enter the upper limit\n"))
