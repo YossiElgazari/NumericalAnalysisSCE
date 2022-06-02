@@ -141,8 +141,6 @@ def switchRows(mat, row1, row2, elmatlist):
     :param elmatlist: elementary list
     :return: matrix after multiplication
     """
-    print("row to switch 1: " + str(row1))
-    print("row to switch 2: " + str(row2))
     newmat = buildZeroMatrix(mat, 0)
     for i in range(0, len(mat)):
         if i == row1:
@@ -197,10 +195,9 @@ def gaussElimination(mat):
             f.write('every multiplication step:\n\n')
             elementaryMatricesList.reverse()
             printEveryStepOfSolution(elementaryMatricesList, mat, f)
+            return currMat
     except IOError:
         print('Error, problem with the output file')
-
-
 
 
 def print_matrix(matrix, f):
@@ -234,7 +231,8 @@ def printElementaryMatrices(elementaryMatricesList, f):
         for currentMatrix in range(0, len(elementaryMatricesList)):  # for every matrix
             for currCol in range(0, len(elementaryMatricesList[currentMatrix][0])):  # for every element
                 # calculate the current element integer part length
-                currNumOfIntegerDigits = len(str(elementaryMatricesList[currentMatrix][currentRow][currCol]).split('.')[0])
+                currNumOfIntegerDigits = len(
+                    str(elementaryMatricesList[currentMatrix][currentRow][currCol]).split('.')[0])
                 if currCol == len(elementaryMatricesList[currentMatrix][0]) - 1:  # if in the last col of a matrix
                     for _ in range(maxNumberOfIntegerDigits - currNumOfIntegerDigits, 0, -1):
                         result += ' '
@@ -285,7 +283,7 @@ def printEveryStepOfSolution(elementaryMatricesList, matrix, f):
     :param matrix: the original matrix
     """
     currMatrix = eval(repr(matrix))  # copy the last matrix
-    while(elementaryMatricesList):  # as long as the list is not empty
+    while (elementaryMatricesList):  # as long as the list is not empty
         # currMatrix = eval(repr(matrix))  # copy the last matrix
         currElementaryMatrix = elementaryMatricesList.pop()  # pop the next elementary matrix fom the list
         for row in currElementaryMatrix:  # for every row in the elementary matrix
@@ -317,7 +315,3 @@ for i in range(R):  # A for loop for row entries
 3 -1  2   4     1  2 -1 -3
 1  2 -1  -3     0  1 -1 -1
 """
-
-matrix = [[0, 1, -1, -1], [3, -1, 1, 4], [1, 1, -2, -3]]
-matrix2 = [[0, 1, -1, -1], [3, -1, 2, 4], [1, 2, -1, -3]]
-gaussElimination(matrix)
