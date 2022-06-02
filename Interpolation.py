@@ -86,14 +86,6 @@ def activateNevilleMethod(xList, yList, x):
     printcolored("Terminating Neville Interpolation\n")
 
 
-def getYAndXLists(size):
-    xList = getListOfValues(size, 'x')
-    yList = getListOfValues(size, 'y')
-    # sorts both lists based on the xList
-    xList, yList = zip(*sorted(zip(xList, yList)))
-    return xList, yList
-
-
 def getBoundariesIndexOfX(x, xList, size):
     if x < xList[0] or x > xList[size - 1]:
         return None, None
@@ -119,6 +111,13 @@ def getListOfValues(size, sign):
         val = getValue(f'Please enter {sign}{i + 1}: ', float)
         values.append(val)
     return values
+    
+def getYAndXLists(size):
+    xList = getListOfValues(size, 'x')
+    yList = getListOfValues(size, 'y')
+    # sorts both lists based on the xList
+    xList, yList = zip(*sorted(zip(xList, yList)))
+    return xList, yList
 """
 
 
