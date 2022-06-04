@@ -11,6 +11,11 @@ def has_numbers(inputString):
 
 
 def printcolored(message):
+    """
+    gets a message to print, if the message contains digits prints the message in Green, otherwise prints in Red.
+
+    :param message: string, the message to print
+    """
     if has_numbers(message):
         print("\033[32m{}\033[00m".format(message))
     else:
@@ -23,7 +28,9 @@ def bygaussElimination(mat):
 
     :param mat: matrix
     """
+    # make the matrix a dominant diagonal matrix
     currMat = checkPivotMax(mat, [])
+    # rank the matrix
     currMat = zeroUnderPivot(currMat, [])
     currMat = zeroAbovePivot(currMat, [])
     currMat = makePivotOne(currMat, [])
@@ -62,23 +69,47 @@ def extractSolutionColumn(matrix):
 
 
 def activateNevilleMethod(xList, yList, x):
+    """
+    given n points(x,y) build a polynom of rising degree and find an approximation p(x).
+
+    :param xList: list containing float values in ascending order that represent x-axis coordinates
+    :param yList: list containing float values of y's so f(xi) = yi
+    :param x: float, the value to find its solution.
+    """
+
     def nevilleMethod(m, n):
+        """
+        fins the result of the polynom(p) that was built from points m to n when assigning x.
+
+        :param m: the smaller index
+        :param n: the bigger index
+        :return: the result of the polynomial that was built from points small index to bigger index when assigned with x.
+        """
+        # if we don't have the answer saved in the memo
         if (m, n) not in resultsDictionary.keys():
+            # calculate the result of Pm-n.
             res = (((x - xList[m]) * nevilleMethod(m + 1, n)) - ((x - xList[n]) * nevilleMethod(m, n - 1))) / (
                     xList[n] - xList[m])
+            # store the result in the memo
             resultsDictionary[(m, n)] = res
         return resultsDictionary[(m, n)]
 
     printcolored("Activating Neville Interpolation:")
     valuesListSize = len(xList)
+    # if the x appears in the xList return the matching y value in yList
     if x in xList:
         print(yList[xList.index(x)])
         return
+    # find the points indexes that bound x
     firstIndex, secondIndex = getBoundariesIndexOfX(x, xList, valuesListSize)
+    # if x is out of the xList boundaries(extrapolation)
     if firstIndex is None or secondIndex is None:
         print('The x to approximate its value is not between the range of the given x values')
         return None
+    # create the memo to store the results in
     resultsDictionary = createValuesDictionary(valuesListSize, yList)
+    # runs on all the xList with jumps of 'diff'
+    # i.e: diff = 1: (0,1), (1,2), ..., (n-1, n), diff = 2: (0,2), (1,3)...(n-2,n),..., diff = n-1: (0,n-1)
     for diff in range(1, valuesListSize):
         for index in range(valuesListSize - diff):  # 4  0,1  1,1  2,3
             result = nevilleMethod(index, index + diff)
@@ -87,9 +118,20 @@ def activateNevilleMethod(xList, yList, x):
 
 
 def getBoundariesIndexOfX(x, xList, size):
+    """
+    find the indexes of the float values in xList that x is between them and returns them.
+
+    :param x: the x to find its boundaries indexes
+    :param xList: list containing float values in ascending order to search the boundaries of x in.
+    :param size: the size of xList
+    :return: indexes of the boundaries of x in the xList.
+    """
+    # if x is out of boundaries
     if x < xList[0] or x > xList[size - 1]:
         return None, None
+    # run on every 2 x values
     for i in range(size - 1):
+        # if x value is between them
         if xList[i] < x < xList[i + 1]:
             return i, i + 1
 
@@ -122,22 +164,43 @@ def getYAndXLists(size):
 
 
 def createValuesDictionary(size, yList):
+    """
+    returns a dictionary for memoization with the base cases results stored in it.
+    i.e: p(0,0) = p(xList[0]) = yList[0]
+
+    :param size: yList size
+    :param yList: list containing float values representing experiments results.
+    :return: dictionary for memoization with initialized base cases.
+    """
+    # create a list [0,1,...., yList.size - 1]
     indexes = list(range(0, size))
     xyDictionary = {}
+    # initialize base cases, i.e: dict[(0,0)] = yList[0]]
     for key, val in zip(indexes, yList):
         xyDictionary[(key, key)] = val
     return xyDictionary
 
 
 def activateLinearInterpolation(xList, yList, x):
+    """
+    approximates p(x) by building a linear equation with the 2 points that are the boundaries of x.
+
+    :param xList: list containing float values in ascending order that represent x-axis coordinates
+    :param yList: list containing float values of y's so f(xi) = yi
+    :param x: float, the value to find its solution.
+    """
     printcolored("Activating Linear Interpolation:")
     valuesListSize = len(xList)
+    # if the x appears in the xList return the matching y value in yList
     if x in xList:
         return yList[xList.index(x)]
+    # find the points indexes that bound x
     index1, index2 = getBoundariesIndexOfX(x, xList, valuesListSize)
+    # if x is out of the xList boundaries(extrapolation)
     if index1 is None or index2 is None:
         print('The x to approximate its value is not between the range of the given x values')
         return None
+    # creates linear equation y = m*x + n
     m = (yList[index1] - yList[index2]) / (xList[index1] - xList[index2])
     n = ((yList[index2] * xList[index1]) - (yList[index1] * xList[index2])) / (xList[index1] - xList[index2])
     approximation = round(m * x + n, 9)
@@ -146,26 +209,52 @@ def activateLinearInterpolation(xList, yList, x):
 
 
 def activatePolynomialInterpolation(xList, yList, x):
+    """
+    given n+1 points, build a polynomila of degree n and finds p(x)
+
+    :param xList: list containing float values in ascending order that represent x-axis coordinates
+    :param yList: list containing float values of y's so f(xi) = yi
+    :param x: float, the value to find its solution.
+    """
+
     def initMatrix(mat, size):
+        """
+        gets a list representing a matrix of size: sizeXsize, build the matrix used the polynomial interpolation method
+        returns a matrix of size: sizeXsize+1 containing the solution column.
+
+        :param mat: list of lists, the matrix to initialize.
+        :param size: the size of cols and rows
+        :return: a matrix of size: sizeXsize+1 used in the polynomial interpolation.
+        """
+        # for every row
         for i in range(size):
+            # for every column
             for j in range(size):
                 mat[i][j] = pow(xList[i], j)
+            # add the solution column to the end of every row
             mat[i].append(yList[i])
         return mat
 
     printcolored("Activating Polynomial Interpolation:")
     valuesListSize = len(xList)
+    # if the x appears in the xList return the matching y value in yList
     if x in xList:
         return yList[xList.index(x)]
+    # find the points indexes that bound x
     index1, index2 = getBoundariesIndexOfX(x, xList, valuesListSize)
+    # if x is out of the xList boundaries(extrapolation)
     if index1 is None or index2 is None:
         print('The x to approximate its value is not between the range of the given x values')
         return None
+    # creates the 0 matrix of size NxN
     matrix = createZeroMatrixInSize(valuesListSize, valuesListSize)
+    # initialize the matrix for finding the answer for p(x)
     matrix = initMatrix(matrix, valuesListSize)
+    # rank the matrix
     rankedMatrix = bygaussElimination(matrix)
+    # extract the solution column of the ranked matrix
     solutionVector = extractSolutionColumn(rankedMatrix)
-
+    # calculate the answer
     result = 0
     for i in range(valuesListSize):
         result += solutionVector[i][0] * pow(x, i)
@@ -174,7 +263,24 @@ def activatePolynomialInterpolation(xList, yList, x):
 
 
 def activateLagrangeInterpolation(xList, yList, x):
+    """
+    finds an approximation for the y value of x by creating a polynomial that goes through a single point but
+    is zero for every other point.
+    Pn(x) = i=1...n(Li(x) * Yi)
+
+    :param xList: list containing float values in ascending order that represent x-axis coordinates
+    :param yList: list containing float values of y's so f(xi) = yi
+    :param x: float, the value to find its solution.
+    """
+
     def Li_x(index):
+        """
+        calculates Li(x).
+        Li(x) = j= 0...n(i != j) ((X - Xj) / (Xi - Xj))
+
+        :param index:the index of the x value we are iterating on in the xList
+        :return: Li(x)
+        """
         res = 1
         for j in range(valuesListSize):
             if j != index:
@@ -183,13 +289,17 @@ def activateLagrangeInterpolation(xList, yList, x):
 
     printcolored("Activating Lagrange Interpolation:")
     valuesListSize = len(xList)
+    # if the x appears in the xList return the matching y value in yList
     if x in xList:
         return yList[xList.index(x)]
+    # find the points indexes that bound x
     index1, index2 = getBoundariesIndexOfX(x, xList, valuesListSize)
+    # if x is out of the xList boundaries(extrapolation)
     if index1 is None or index2 is None:
         print('The x to approximate its value is not between the range of the given x values')
         return None
     result = 0
+    # Pn(x) = i=1...n(Li(x) * Yi)
     for i in range(valuesListSize):
         result += Li_x(i) * yList[i]
     printcolored('result: {}'.format(result))
@@ -197,7 +307,23 @@ def activateLagrangeInterpolation(xList, yList, x):
 
 
 def activateSplineQubic(xList, yList, x, fTag0, fTagN):
+    """
+    calculates an approximation for p(x) based on the given points values by using both natural and full cubic spline
+
+    :param xList: list containing float values in ascending order that represent x-axis coordinates
+    :param yList: list containing float values of y's so f(xi) = yi
+    :param x: float, the value to find its solution.
+    :param fTag0: float value, representing f'(xList[0]), used for full spline cubic.
+    :param fTagN: float value, representing f'(xList[n]), used for full spline cubic.
+    """
+
     def createHList():
+        """
+        creates a list of flaot values representing distances between every 2 adjacent points.
+        Hi = Xi+1 - Xi
+
+        :return: a list containing the distances between every 2 adjacent points.
+        """
         res = []
         for i in range(valuesListSize - 1):
             res.append(xList[i + 1] - xList[i])
@@ -205,6 +331,11 @@ def activateSplineQubic(xList, yList, x, fTag0, fTagN):
         return res
 
     def createLambdaList():
+        """
+        uses equation: lamda_i = hList_i / (hList_i-1 + hList_i).
+
+        :return:list containing all the lamda values.
+        """
         res = []
         for i in range(1, len(hList)):
             res.append(hList[i] / (hList[i] + hList[i - 1]))
@@ -212,6 +343,11 @@ def activateSplineQubic(xList, yList, x, fTag0, fTagN):
         return res
 
     def createMiuList():
+        """
+        uses equation: miu_i = 1 - lamdaList[i].
+
+        :return: list of all the miu values.
+        """
         res = []
         for i in range(len(lamdaList)):
             res.append(1 - lamdaList[i])
@@ -219,6 +355,11 @@ def activateSplineQubic(xList, yList, x, fTag0, fTagN):
         return res
 
     def createDList():
+        """
+        uses equation: Di = (6 / (hList_i-1 + hList_i)) * ( ( (Fi+1 - Fi) / Hi ) - ( (Fi - Fi-1) / Hi-1 ) )
+
+        :return:
+        """
         res = []
         for i in range(1, len(hList)):
             di = (6 / (hList[i - 1] + hList[i])) * (
@@ -228,31 +369,49 @@ def activateSplineQubic(xList, yList, x, fTag0, fTagN):
         return res
 
     def createNaturalSplineMatrix():
+        """
+        creates matrix for natural spline cubic.
+
+        :return: the matrix.
+        """
+        # creates 0 matrix of size NxN+1
         matrix = createZeroMatrixInSize(valuesListSize, valuesListSize + 1)
         numOfRows = len(matrix)
         matrix[0][0] = 2
+        # for every row in the matrix starting from the second row
         for index in range(1, numOfRows - 1):
+            # initialize diagonal value
             matrix[index][index] = 2
+            # initialize the value that is left to the diagonal
             matrix[index][index - 1] = miuList[index - 1]
+            # initialize the value that is right to the diagonal
             matrix[index][index + 1] = lamdaList[index - 1]
-        matrix[numOfRows - 1][numOfRows - 1] = 2
-        for index in range(1, numOfRows - 1):
-            # last column of every row
+            # initialize the last column (solution column) value
             matrix[index][numOfRows] = dList[index - 1]
+        matrix[numOfRows - 1][numOfRows - 1] = 2
+        """for index in range(1, numOfRows - 1):
+            # last column of every row
+            matrix[index][numOfRows] = dList[index - 1]"""
         return matrix
 
     printcolored("Activating Natural Spline Cubic Interpolation:")
     valuesListSize = len(xList)
+    # if the x appears in the xList return the matching y value in yList
     if x in xList:
         return yList[xList.index(x)]
+    # preprocessing
     hList = createHList()
     lamdaList = createLambdaList()
     miuList = createMiuList()
     dList = createDList()
-    # Natural Spline Cubic
+    """Natural Spline Cubic"""
+    # initialize matrix for natural spline cubic
     naturalSplineMatrix = createNaturalSplineMatrix()
+    # extract the solution column from the ranked matrix
     solutionVector = extractSolutionColumn(bygaussElimination(naturalSplineMatrix))
+    # find the points indexes that bound x
     index1, index2 = getBoundariesIndexOfX(x, xList, valuesListSize)
+    # calculate result
     res1 = ((pow(xList[index2] - x, 3) * solutionVector[index1][0]) + (
             pow(x - xList[index1], 3) * solutionVector[index1][0])) / (6.0 * hList[index1])
     res2 = (((xList[index2] - x) * yList[index1]) + ((x - xList[index1]) * yList[index2])) / hList[index1]
@@ -261,19 +420,24 @@ def activateSplineQubic(xList, yList, x, fTag0, fTagN):
                index1] / 6.0
     printcolored('result: {}'.format(res1 + res2 - res3))
     printcolored("Terminating Natural Spline Cubic Interpolation\n")
-    # Full Spline Cubic
+    """Full Spline Cubic"""
     printcolored("Activating Full Spline Cubic Interpolation:")
     fullSplineMatrix = eval(repr(naturalSplineMatrix))
+    # calculate d0, dn
     d0 = 6.0 / hList[0] * (((yList[1] - yList[0]) / hList[0]) - fTag0)
     dn = 6.0 / hList[valuesListSize - 2] * (
             fTagN - ((yList[valuesListSize - 1] - yList[valuesListSize - 2]) / hList[0]))
     print('d0: ', d0)
     print('dn: ', dn)
+    # lambda[0]
     fullSplineMatrix[0][1] = 1
     fullSplineMatrix[0][valuesListSize] = d0
+    # miu[n]
     fullSplineMatrix[valuesListSize - 1][valuesListSize - 2] = 1
     fullSplineMatrix[valuesListSize - 1][valuesListSize] = dn
+    # extract the solution column from the ranked matrix
     solutionVector = extractSolutionColumn(bygaussElimination(fullSplineMatrix))
+    # calculate result
     res1 = ((pow(xList[index2] - x, 3) * solutionVector[index1][0]) + (
             pow(x - xList[index1], 3) * solutionVector[index1][0])) / (6.0 * hList[index1])
     res2 = (((xList[index2] - x) * yList[index1]) + ((x - xList[index1]) * yList[index2])) / hList[index1]
@@ -283,25 +447,6 @@ def activateSplineQubic(xList, yList, x, fTag0, fTagN):
     printcolored('result: {}'.format(res1 + res2 - res3))
     printcolored("Terminating Full Spline Cubic Interpolation\n")
 
-
-"""matrix[0][0] = 2
-matrix[0][1] = lamdaList[0]"""
-
-"""
-d0: -0.51647
-dn = -4.27202533
-pi/3: 1.04719755
-X: [0, 0.523598776, 0.785398163, 1.57079633]
-Y: [0, 0.5, 0.7072, 1]
-
-H: [0.523598776, 0.261799388, 0.785398163] 
-lambda: [0.33333333, 0.75]
-miu: [0.66666667, 0.25]
-D: [-1.2518, -2.3152]
-
-f'(0) = 1
-f'(pi/2) = 0
-"""
 
 # TODO Parameters for the interpolation functions, change them by choice!
 xList = [0, math.pi / 6, math.pi / 4, math.pi / 2]
@@ -320,4 +465,5 @@ def main(xList, yList, x):
     activateSplineQubic(xList, yList, x, ftagzero, ftagn)
 
 
+# main
 main(xList, yList, x)
