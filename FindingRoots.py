@@ -43,7 +43,7 @@ def bisection_method(poli, start_point, end_point, ep=0.0001):
 def newton_raphson(poli, start_point, end_point, ep=0.0001):
     """
     Searches for a root of the polynomial given between x values: start point and end point by the newton raphson
-    method.
+    method .
 
     :param poli: sympy polynomial
     :param start_point: float representing the initial x value from which the search for roots starts.
