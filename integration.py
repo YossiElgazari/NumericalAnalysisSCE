@@ -1,8 +1,15 @@
 import sympy as sp
 
 
-
 def dividesection(leftbound, rightbound, numberofsections):
+    """
+    dividing the boundaries into sections in list [0.1,0.2] [0.2,0.3] ....
+
+    :param leftbound:  left boundary
+    :param rightbound: right boundary
+    :param numberofsections: number of sections
+    :return: list of sections
+    """
     dist = (rightbound - leftbound) / numberofsections
     sectionslist = []
     while (leftbound < rightbound):
@@ -12,35 +19,48 @@ def dividesection(leftbound, rightbound, numberofsections):
 
 
 def Trapezemethod(leftboundary, rightboundary, function):
+    """
+    Calculates the integral of the function between the borders
+
+    :param leftboundary:  left boundary
+    :param rightboundary: right boundary
+    :param function: function
+    :return: integral
+    """
+
+    def calculateIntegral(integral, sections):
+        for section in sections:
+            integral = integral + 0.5 * (section[1] - section[0]) * (f(section[0]) + f(section[1]))
+        return integral
+
     x = sp.symbols('x')
     f = sp.utilities.lambdify(x, function)
     numofsection = 10
     section = dividesection(leftboundary, rightboundary, numofsection)
-    i = 0
     oldintegral = 0
-    while i < len(section):
-        oldintegral = oldintegral + 0.5 * (section[i][1] - section[i][0]) * (f(section[i][0]) + f(section[i][1]))
-        i += 1
+    oldintegral = calculateIntegral(oldintegral, section)
     numofsection += 10
     section = dividesection(leftboundary, rightboundary, numofsection)
-    i = 0
     newintegral = 0
-    while i < len(section):
-        newintegral = newintegral + 0.5 * (section[i][1] - section[i][0]) * (f(section[i][0]) + f(section[i][1]))
-        i += 1
+    newintegral = calculateIntegral(newintegral, section)
     while abs(newintegral - oldintegral) > 0.0000001:
         oldintegral = newintegral
-        newintegral = 0
         numofsection += 10
         section = dividesection(leftboundary, rightboundary, numofsection)
-        i = 0
-        while i < len(section):
-            newintegral = newintegral + 0.5 * (section[i][1] - section[i][0]) * (f(section[i][0]) + f(section[i][1]))
-            i += 1
+        newintegral = 0
+        newintegral = calculateIntegral(newintegral, section)
     return newintegral
 
 
 def callsympsonmethod(leftboundary, rightboundary, function):
+    """
+    Activates sympsonMethod untill the difference will match the precise that we chose
+
+    :param leftboundary:  left boundary
+    :param rightboundary: right boundary
+    :param function: function
+    :return: integral
+    """
     numofsection = 10
     oldintegral = sympsonMethod(leftboundary, rightboundary, function, numofsection)
     numofsection += 10
@@ -72,10 +92,8 @@ def sympsonMethod(leftBoundary, rightBoundary, polynomial, numofsection):
     result = h * f(leftBoundary)
     #  for every boundary in mash starting from the second boundary
     for index in range(1, size):
-
         # calculate h
         h = mash[index][1] - mash[index][0]
-
         if index % 2 == 1:
             result += 4 * h * f(mash[index][0])
         else:
@@ -84,11 +102,28 @@ def sympsonMethod(leftBoundary, rightBoundary, polynomial, numofsection):
     return 1.0 / 3.0 * result
 
 
-x = sp.symbols('x')
-p = x ** 3 + sp.sin(x) + 5 * x ** 2 - sp.cos(x) ** 2
-p = 2*x
-a = 0.1
-b = 0.2
+def main():
+    x = sp.symbols('x')
+    # TODO: ↓ ENTER FUNCTION HERE ↓.
+    f = x ** 6 + 5 * x
+    # get boundaries from user
+    leftb = float(input("enter the left boundary: "))
+    rightb = float(input("enter the right boundary: "))
+    # calculate the number of sub- ranges to divide the big range into
+    choice = ''
+    while choice != -1:
+        print("Press 1 to solve with Trapez Method.")
+        print("Press 2 to solve with Sympson Method.")
+        print("Press 3 to Exit.")
+        choice = input("Enter number of method you want to solve with: ")
+        if choice == '1':
+            print("The Area Is: " + str(Trapezemethod(leftb, rightb, f)))
+        elif choice == '2':
+            print("The Area Is: " + str(callsympsonmethod(leftb, rightb, f)))
+        elif choice == '3':
+            break
+        else:
+            print("Wrong choice, try again.")
+    print("GoodBye.")
 
-print(Trapezemethod(a, b, p))
-print(callsympsonmethod(a, b, p))
+main()

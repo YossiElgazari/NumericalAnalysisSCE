@@ -2,9 +2,9 @@ import math
 from gaussElimination import *
 
 
-# Solal Ohana
-# Lior Shilon
-# Yossi Elgazari
+# Solal Ohana 336410055
+# Lior Shilon 316126143
+# Yossi Elgazari 319068920
 
 def has_numbers(inputString):
     return any(char.isdigit() for char in inputString)
@@ -449,9 +449,9 @@ def activateSplineQubic(xList, yList, x, fTag0, fTagN):
 
 
 # TODO Parameters for the interpolation functions, change them by choice!
-xList = [0, math.pi / 6, math.pi / 4, math.pi / 2]
-yList = [0, 0.5, 0.7072, 1]
-x = math.pi / 3
+xList = [1,2,3,4,5]
+yList = [1,2,1,1.5,1]
+x = 1.5
 # Parameters only for full spline cubic
 ftagzero = 0
 ftagn = 1
