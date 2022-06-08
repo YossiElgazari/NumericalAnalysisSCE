@@ -18,6 +18,7 @@ def neville(datax, datay, x):
                 p[i] = ((x-datax[i+k])*p[i]+ \
                         (datax[i]-x)*p[i+1])/ \
                         (datax[i]-datax[i+k])
+                print('the',i,'iteration is:',p[i])
     return p[0]
 
 
@@ -25,4 +26,4 @@ xList = [1.2,1.3,1.4,1.5,1.6]
 yList = [3.5095,3.6984,3.9043,4.1294,4.3756]
 x = 1.37
 
-print(neville(xList,yList,x))
+print('f(',x,')=',neville(xList,yList,x))
