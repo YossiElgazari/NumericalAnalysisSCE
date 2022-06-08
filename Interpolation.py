@@ -449,20 +449,20 @@ def activateSplineQubic(xList, yList, x, fTag0, fTagN):
 
 
 # TODO Parameters for the interpolation functions, change them by choice!
-xList = [1,2,3,4,5]
-yList = [1,2,1,1.5,1]
-x = 1.5
+xList = [1.2,1.3,1.4,1.5,1.6]
+yList = [3.5095,3.6984,3.9043,4.1294,4.3756]
+x = 1.37
 # Parameters only for full spline cubic
 ftagzero = 0
 ftagn = 1
 
 
 def main(xList, yList, x):
-    activateLinearInterpolation(xList, yList, x)
-    activatePolynomialInterpolation(xList, yList, x)
-    activateLagrangeInterpolation(xList, yList, x)
+    #activateLinearInterpolation(xList, yList, x)
+    #activatePolynomialInterpolation(xList, yList, x)
+    #activateLagrangeInterpolation(xList, yList, x)
     activateNevilleMethod(xList, yList, x)
-    activateSplineQubic(xList, yList, x, ftagzero, ftagn)
+    #activateSplineQubic(xList, yList, x, ftagzero, ftagn)
 
 
 # main

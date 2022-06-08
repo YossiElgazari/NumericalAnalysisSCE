@@ -61,6 +61,7 @@ def newton_raphson(poli, start_point, end_point, ep=0.0001):
     xr = start_point
     try:
         xrr = xr - (f(xr) / ftag(xr))
+        print(xrr)
     except ZeroDivisionError:
         print("Division by zero!")
         return None
@@ -70,6 +71,7 @@ def newton_raphson(poli, start_point, end_point, ep=0.0001):
         xr = xrr
         try:
             xrr = xr - (f(xr) / ftag(xr))
+            print(xrr)
         except ZeroDivisionError:
             print("Division by zero!")
             return None, 0
@@ -97,6 +99,7 @@ def secant_method(poli, start_point, end_point, ep=0.0001):
     xr = start_point
     xrr = end_point
     xrrr = (xr * f(xrr) - xrr * f(xr)) / (f(xrr) - f(xr))
+    print(xrr)
     # search for a root with secant method
     while rootNotFound(xrr, xrrr, ep) and numOfIterations <= maxNumOfIterations:
         numOfIterations += 1
@@ -104,6 +107,7 @@ def secant_method(poli, start_point, end_point, ep=0.0001):
         xrr = xrrr
         try:
             xrrr = (xr * f(xrr) - xrr * f(xr)) / (f(xrr) - f(xr))
+            print(xrr)
         except ZeroDivisionError:
             print("Division by zero!")
             return None, 0
@@ -167,6 +171,7 @@ def searchForRoots(polinom, method, mash, ep=0.0001):
         # if there is x, so f(x) = 0 in the sub-range
         if f(sub_range[0]) * f(sub_range[1]) < 0:
             # activate the given iterative method on this sub-range
+            print("Root searching")
             solution, numOfIterations = method(polinom, sub_range[0], sub_range[1], ep)
             # if found a solution: x
             if solution is not None:
@@ -187,7 +192,7 @@ def main():
         '2': newton_raphson,
         '3': secant_method}
     # TODO: ↓ ENTER POLYNOMIAL HERE ↓.
-    p = x ** 6 - 3 * x ** 5 - 6 * x ** 4 + 10 * x ** 3 + 21 * x ** 2 + 9 * x
+    p = sp.sin(2*math.e**(-2*x))/((2*x**3)+(5*x**2)-6)
     # get range from user
     startpoint = float(input("enter the bottom limit\n"))
     endpoint = float(input("enter the upper limit\n"))

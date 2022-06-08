@@ -1,3 +1,5 @@
+import math
+
 import sympy as sp
 
 
@@ -43,7 +45,7 @@ def Trapezemethod(leftboundary, rightboundary, function):
     section = dividesection(leftboundary, rightboundary, numofsection)
     newintegral = 0
     newintegral = calculateIntegral(newintegral, section)
-    while abs(newintegral - oldintegral) > 0.0000001:
+    while abs(newintegral - oldintegral) > 0.0001:
         oldintegral = newintegral
         numofsection += 10
         section = dividesection(leftboundary, rightboundary, numofsection)
@@ -63,13 +65,16 @@ def callsympsonmethod(leftboundary, rightboundary, function):
     """
     numofsection = 10
     oldintegral = sympsonMethod(leftboundary, rightboundary, function, numofsection)
+    print(oldintegral)
     numofsection += 10
     newintegral = sympsonMethod(leftboundary, rightboundary, function, numofsection)
+    print(newintegral)
     while abs(newintegral - oldintegral) > 0.0000001:
         oldintegral = newintegral
         newintegral = 0
         numofsection += 10
         newintegral = sympsonMethod(leftboundary, rightboundary, function, numofsection)
+        print(newintegral)
     return newintegral
 
 
@@ -90,6 +95,7 @@ def sympsonMethod(leftBoundary, rightBoundary, polynomial, numofsection):
     size = len(mash)
     # calculate result
     result = h * f(leftBoundary)
+    print(result)
     #  for every boundary in mash starting from the second boundary
     for index in range(1, size):
         # calculate h
@@ -105,7 +111,7 @@ def sympsonMethod(leftBoundary, rightBoundary, polynomial, numofsection):
 def main():
     x = sp.symbols('x')
     # TODO: ↓ ENTER FUNCTION HERE ↓.
-    f = x ** 6 + 5 * x
+    f = sp.cos((2*x**3)+(5*x**2)-6)/(2*math.e**(-2*x))
     # get boundaries from user
     leftb = float(input("enter the left boundary: "))
     rightb = float(input("enter the right boundary: "))
