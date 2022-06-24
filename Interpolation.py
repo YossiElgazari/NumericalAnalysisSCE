@@ -7,19 +7,62 @@ from gaussElimination import *
 
 def print_matrix(matrix):
     """
-    prints matrix
+    prints a matrix so every element will be on the same printing column with all the elements that are on the same
+    column with it in the matrix.
+    it does so by calculating the longest integer part of a number on the matrix and determine
+    the number of spaces before an element with consideration to the element's integer part length
 
-    :param matrix: matrix
+    @param matrix: list representing the matrix to print
     """
-    for row in matrix:
-        rowString = ''
-        for element in row:
-            rowString += f'{str(element)} '
-        print(rowString)
-    print('')
+    newMatrix = []
+    newMatrix.append(matrix)
+    maxIntNumberLength = findMaxLengthNumberInElementaryList(newMatrix)
+    # print every row of the reverse matrix so numbers in the same col will be on the same col also in the printing
+    # determine how many spaces to add before an element by: maxIntNumberLength - currIntNumberLength
+    numOfRows = len(matrix)
+    numOfCols = len(matrix[0])
+    # for each row
+    for row in range(0, numOfRows):
+        rowStr = '|'
+        # for each column
+        for col in range(0, numOfCols):
+            # calculate the integer part length of the current number
+            currIntNumberLength = len(str(matrix[row][col]).split('.')[0])
+            # add spaces before the element according to max integer length anf the current number integer length
+            for _ in range(maxIntNumberLength - currIntNumberLength, 0, -1):
+                rowStr += ' '
+            rowStr += f'{matrix[row][col]:.4f} '
+            # if it's the last col
+            if col == numOfCols - 1:
+                rowStr += '|'
+        print(rowStr)
+    print('\n')
+
+
+def findMaxLengthNumberInElementaryList(elementaryMatricesList):
+    """
+    finds the longest integer part size of all the numbers in a list of matrices
+
+    @param elementaryMatricesList: all the elementary matrices used to reach the solution
+    @return: the size of the longest integer part
+    """
+    maxLength = 0
+    for matrix in elementaryMatricesList:  # for every matrix
+        for row in matrix:  # for every row in the matrix
+            for element in row:  # for every element in the row
+                currLength = len(str(element).split('.')[0])  # calculates the number of digits before the decimal point
+                if currLength > maxLength:
+                    maxLength = currLength
+    return maxLength
 
 
 def has_numbers(inputString):
+    """
+    Checking if there is any digits in the string
+
+    :param inputString: string
+    :return: if there digit
+    """
     return any(char.isdigit() for char in inputString)
 
 
@@ -127,7 +170,7 @@ def activateNevilleMethod(xList, yList, x):
         for index in range(valuesListSize - diff):  # 4  0,1  1,1  2,3
             result = nevilleMethod(index, index + diff)
     for key, val in resultsDictionary.items():
-        print(f'P{key[0],key[1]} = {val}')
+        print(f'P{key[0], key[1]} = {val}')
     printcolored('result: {}'.format(result))
     printcolored("Terminating Neville Interpolation\n")
 
@@ -449,16 +492,15 @@ def activateSplineQubic(xList, yList, x, fTag0, fTagN):
     printcolored("Terminating Full Spline Cubic Interpolation\n")
 
 
-# TODO Parameters for the interpolation functions, change them by choice!
-xList = [1, 2, 3, 4, 5]
-yList = [1, 2, 1, 1.5, 1]
-x = 1.5
-# Parameters only for full spline cubic
-ftagzero = 0
-ftagn = 1
+def main():
+    # TODO Parameters for the interpolation functions, change them by choice!
+    xList = [1, 2, 3, 4, 5]
+    yList = [1, 2, 1, 1.5, 1]
+    x = 1.5
+    # Parameters only for full spline cubic
+    ftagzero = 0
+    ftagn = 1
 
-
-def main(xList, yList, x):
     activateLinearInterpolation(xList, yList, x)
     activatePolynomialInterpolation(xList, yList, x)
     activateLagrangeInterpolation(xList, yList, x)
@@ -467,4 +509,4 @@ def main(xList, yList, x):
 
 
 # main
-main(xList, yList, x)
+main()
