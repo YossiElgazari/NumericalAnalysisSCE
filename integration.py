@@ -40,16 +40,19 @@ def Trapezemethod(leftboundary, rightboundary, function):
     section = dividesection(leftboundary, rightboundary, numofsection)
     oldintegral = 0
     oldintegral = calculateIntegral(oldintegral, section)
+    print('old integral:', oldintegral)
     numofsection += 10
     section = dividesection(leftboundary, rightboundary, numofsection)
     newintegral = 0
     newintegral = calculateIntegral(newintegral, section)
+    print('new integral:', newintegral)
     while abs(newintegral - oldintegral) > 0.0001:
         oldintegral = newintegral
         numofsection += 10
         section = dividesection(leftboundary, rightboundary, numofsection)
         newintegral = 0
         newintegral = calculateIntegral(newintegral, section)
+        print('new integral:', newintegral)
     return newintegral
 
 
@@ -64,16 +67,16 @@ def callsympsonmethod(leftboundary, rightboundary, function):
     """
     numofsection = 10
     oldintegral = sympsonMethod(leftboundary, rightboundary, function, numofsection)
-    print(oldintegral)
+    print('old integral:', oldintegral)
     numofsection += 10
     newintegral = sympsonMethod(leftboundary, rightboundary, function, numofsection)
-    print(newintegral)
+    print('new integral:', newintegral)
     while abs(newintegral - oldintegral) > 0.0000001:
         oldintegral = newintegral
-        newintegral = 0
+        # newintegral = 0
         numofsection += 10
         newintegral = sympsonMethod(leftboundary, rightboundary, function, numofsection)
-        print(newintegral)
+        print('new integral:', newintegral)
     return newintegral
 
 
@@ -94,7 +97,6 @@ def sympsonMethod(leftBoundary, rightBoundary, polynomial, numofsection):
     size = len(mash)
     # calculate result
     result = h * f(leftBoundary)
-    print(result)
     #  for every boundary in mash starting from the second boundary
     for index in range(1, size):
         # calculate h

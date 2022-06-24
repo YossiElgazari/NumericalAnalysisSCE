@@ -5,6 +5,20 @@ from gaussElimination import *
 # Lior Shilon 316126143
 # Yossi Elgazari 319068920
 
+def print_matrix(matrix):
+    """
+    prints matrix
+
+    :param matrix: matrix
+    """
+    for row in matrix:
+        rowString = ''
+        for element in row:
+            rowString += f'{str(element)} '
+        print(rowString)
+    print('')
+
+
 def has_numbers(inputString):
     return any(char.isdigit() for char in inputString)
 
@@ -112,6 +126,8 @@ def activateNevilleMethod(xList, yList, x):
     for diff in range(1, valuesListSize):
         for index in range(valuesListSize - diff):  # 4  0,1  1,1  2,3
             result = nevilleMethod(index, index + diff)
+    for key, val in resultsDictionary.items():
+        print(f'P{key[0],key[1]} = {val}')
     printcolored('result: {}'.format(result))
     printcolored("Terminating Neville Interpolation\n")
 
@@ -174,7 +190,10 @@ def activateLinearInterpolation(xList, yList, x):
         return None
     # creates linear equation y = m*x + n
     m = (yList[index1] - yList[index2]) / (xList[index1] - xList[index2])
+    print('m:', m)
     n = ((yList[index2] * xList[index1]) - (yList[index1] * xList[index2])) / (xList[index1] - xList[index2])
+    print('n:', n)
+    print(f'linear equation: y = {m}x+{n}')
     approximation = round(m * x + n, 9)
     printcolored('result: {}'.format(approximation))
     printcolored("Terminating Linear Interpolation\n")
@@ -222,15 +241,20 @@ def activatePolynomialInterpolation(xList, yList, x):
     matrix = createZeroMatrixInSize(valuesListSize, valuesListSize)
     # initialize the matrix for finding the answer for p(x)
     matrix = initMatrix(matrix, valuesListSize)
+    print('matrix for calculations:')
+    print_matrix(matrix)
     # rank the matrix
     rankedMatrix = bygaussElimination(matrix)
+    print('ranked matrix:')
+    print_matrix(rankedMatrix)
     # extract the solution column of the ranked matrix
     solutionVector = extractSolutionColumn(rankedMatrix)
     # calculate the answer
     result = 0
     for i in range(valuesListSize):
+        print('current result:', result)
         result += solutionVector[i][0] * pow(x, i)
-    printcolored('result: {}'.format(round(result, 9)))
+    printcolored('final result: {}'.format(round(result, 9)))
     printcolored("Terminating Polynomial Interpolation\n")
 
 
@@ -274,7 +298,8 @@ def activateLagrangeInterpolation(xList, yList, x):
     # Pn(x) = i=1...n(Li(x) * Yi)
     for i in range(valuesListSize):
         result += Li_x(i) * yList[i]
-    printcolored('result: {}'.format(result))
+        print('temp result:', result)
+    printcolored('final result: {}'.format(result))
     printcolored("Terminating Lagrange Interpolation\n")
 
 
@@ -379,6 +404,8 @@ def activateSplineQubic(xList, yList, x, fTag0, fTagN):
     """Natural Spline Cubic"""
     # initialize matrix for natural spline cubic
     naturalSplineMatrix = createNaturalSplineMatrix()
+    print("natural spline matrix:")
+    print_matrix(naturalSplineMatrix)
     # extract the solution column from the ranked matrix
     solutionVector = extractSolutionColumn(bygaussElimination(naturalSplineMatrix))
     # find the points indexes that bound x
@@ -407,6 +434,8 @@ def activateSplineQubic(xList, yList, x, fTag0, fTagN):
     # miu[n]
     fullSplineMatrix[valuesListSize - 1][valuesListSize - 2] = 1
     fullSplineMatrix[valuesListSize - 1][valuesListSize] = dn
+    print("full spline matrix:")
+    print_matrix(fullSplineMatrix)
     # extract the solution column from the ranked matrix
     solutionVector = extractSolutionColumn(bygaussElimination(fullSplineMatrix))
     # calculate result

@@ -17,15 +17,19 @@ def bisection_method(poli, start_point, end_point, ep=0.0001):
     :param ep: the maximum calculation error.
     :return: a root of the polynomial in the given range if found one, otherwise returns None.
     """
+    print(
+        f'\nSearching in range: [{start_point},{end_point}] for polynomial: {poli}:')
     x = sp.symbols('x')
     f = lambdify(x, poli)
     numOfIterations = 0
+    tempResults = ''
     m = 0  # the root to return if found
     maxNumOfIterations = math.ceil(-1 * (sp.ln((ep / (end_point - start_point))) / sp.ln(2)))
     # search for a root with bisection method
     while rootNotFound(start_point, end_point, ep) and numOfIterations <= maxNumOfIterations:
         numOfIterations += 1
         m = start_point + (end_point - start_point) / 2
+        tempResults += f'{m}\n'
         # if the root is on the left
         if f(start_point) * f(m) < 0:
             end_point = m
@@ -33,8 +37,8 @@ def bisection_method(poli, start_point, end_point, ep=0.0001):
         else:
             start_point = m
     if numOfIterations > maxNumOfIterations:
-        return None, numOfIterations
-    return round(m, 5), numOfIterations
+        return None, numOfIterations, tempResults
+    return round(m, 5), numOfIterations, tempResults
 
 
 def newton_raphson(poli, start_point, end_point, ep=0.0001):
@@ -48,6 +52,8 @@ def newton_raphson(poli, start_point, end_point, ep=0.0001):
     :param ep: the maximum calculation error.
     :return: a root of the polynomial in the given range if found one, otherwise returns None.
     """
+    print(
+        f'\nSearching in range: [{start_point},{end_point}] for polynomial: {poli}:')
     # initialize polynomial and derivative data.
     x = sp.symbols('x')
     f = lambdify(x, poli)
@@ -56,6 +62,7 @@ def newton_raphson(poli, start_point, end_point, ep=0.0001):
     numOfIterations = 0
     maxNumOfIterations = math.ceil(-1 * (sp.ln(ep / (end_point - start_point)) / sp.ln(2)))
     xr = start_point
+    tempResults = ''
     try:
         xrr = xr - (f(xr) / ftag(xr))
     except ZeroDivisionError:
@@ -64,6 +71,7 @@ def newton_raphson(poli, start_point, end_point, ep=0.0001):
     # search for a root with Newton Raphson method
     while rootNotFound(xr, xrr, ep) and numOfIterations <= maxNumOfIterations:
         numOfIterations += 1
+        tempResults += f'iteration number {numOfIterations}:  prev guess: ' + str(xr) + '   curr guess: ' + str(xrr) + '\n'
         xr = xrr
         try:
             xrr = xr - (f(xr) / ftag(xr))
@@ -72,8 +80,8 @@ def newton_raphson(poli, start_point, end_point, ep=0.0001):
             return None, 0
     # if a root was not found
     if numOfIterations > maxNumOfIterations:
-        return None, numOfIterations
-    return round(sp.Float(str(xrr)), 5), numOfIterations
+        return None, numOfIterations, tempResults
+    return round(sp.Float(str(xrr)), 5), numOfIterations, tempResults
 
 
 def secant_method(poli, start_point, end_point, ep=0.0001):
@@ -86,6 +94,7 @@ def secant_method(poli, start_point, end_point, ep=0.0001):
     :param ep: the maximum calculation error.
     :return: a root of the polynomial in the given range if found one, otherwise returns None.
     """
+    print(f'\nSearching in range: [{start_point},{end_point}] for polynomial: {poli}:')
     # initialize polynomial data.
     x = sp.symbols('x')
     f = lambdify(x, poli)
@@ -94,9 +103,11 @@ def secant_method(poli, start_point, end_point, ep=0.0001):
     xr = start_point
     xrr = end_point
     xrrr = (xr * f(xrr) - xrr * f(xr)) / (f(xrr) - f(xr))
+    tempResults = ''
     # search for a root with secant method
     while rootNotFound(xrr, xrrr, ep) and numOfIterations <= maxNumOfIterations:
         numOfIterations += 1
+        tempResults += f'iteration number {numOfIterations}: xr1: {xr}  xr2: ' + str(xrr) + ' xr3: ' + str(xrrr) + '\n'
         xr = xrr
         xrr = xrrr
         try:
@@ -106,8 +117,8 @@ def secant_method(poli, start_point, end_point, ep=0.0001):
             return None, 0
     # if a root was not found
     if numOfIterations > maxNumOfIterations:
-        return None, numOfIterations
-    return round(sp.Float(str(xrrr)), 5), numOfIterations
+        return None, numOfIterations, tempResults
+    return round(sp.Float(str(xrrr)), 5), numOfIterations, tempResults
 
 
 def rootNotFound(start_point, end_point, epsilon):
@@ -164,10 +175,10 @@ def searchForRoots(polinom, method, mash, ep=0.0001):
         # if there is x, so f(x) = 0 in the sub-range
         if f(sub_range[0]) * f(sub_range[1]) < 0:
             # activate the given iterative method on this sub-range
-            solution, numOfIterations = method(polinom, sub_range[0], sub_range[1], ep)
+            solution, numOfIterations, tempResults = method(polinom, sub_range[0], sub_range[1], ep)
             # if found a solution: x
             if solution is not None:
-                solutions.add((solution, numOfIterations))
+                solutions.add((solution, numOfIterations, tempResults))
     return solutions
 
 
@@ -185,6 +196,7 @@ def main():
         '3': secant_method}
     # TODO: ↓ ENTER POLYNOMIAL HERE ↓.
     p = x ** 6 - 3 * x ** 5 - 6 * x ** 4 + 10 * x ** 3 + 21 * x ** 2 + 9 * x
+    p = x**2 + 2*x - 4
     # get range from user
     startpoint = float(input("enter the bottom limit\n"))
     endpoint = float(input("enter the upper limit\n"))
@@ -212,6 +224,7 @@ def main():
             print('Activating', chosenMethod.__name__)
             # search for roots with the polynomial
             solutions = searchForRoots(p, chosenMethod, mash, epsilon)
+
             # search for roots with the derivative
             potentialSolutions = searchForRoots(sp.diff(p, x), chosenMethod, mash, epsilon)
             f = lambdify(x, p)
@@ -222,11 +235,11 @@ def main():
             # search for root on the mash boundaries by assignment of the boundary in the function, f(x)
             # check for the first x value in the mash
             if abs(f(mash[0][0])) <= epsilon:
-                solutions.add((mash[0][0], 0))
+                solutions.add((mash[0][0], 0, 'no temp solutions'))
             # check for each x value in the mash
             for border in mash:
                 if abs(f(border[1])) <= epsilon:
-                    solutions.add((border[1], 0))
+                    solutions.add((border[1], 0, 'no temp solutions'))
             solutions = list(solutions)
             printSolution(solutions)
     print("goodbye")
@@ -251,8 +264,8 @@ def printSolution(solutions):
     else:
         for solution in solutions:
             count += 1
-            string = "solution {0}: {1}, number of iterations for finding root: {2}".format(count, solution[0],
-                                                                                            solution[1])
+            string = "solution {0}:\ntemp solutions:\n{1}final solution: {2}, number of iterations for finding root: {3}\n".format(count, solution[2],
+                                                                                            solution[0], solution[1])
             # if the number of iteration for finding the root is zero
             if solution[1] == 0:
                 # indicate the user it was found by assignment in the function
