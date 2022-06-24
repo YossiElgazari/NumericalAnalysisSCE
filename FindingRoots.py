@@ -17,8 +17,7 @@ def bisection_method(poli, start_point, end_point, ep=0.0001):
     :param ep: the maximum calculation error.
     :return: a root of the polynomial in the given range if found one, otherwise returns None.
     """
-    print(
-        f'\nSearching in range: [{start_point},{end_point}] for polynomial: {poli}:')
+    # print(f'\nSearching in range: [{start_point},{end_point}] for polynomial: {poli}:')
     x = sp.symbols('x')
     f = lambdify(x, poli)
     numOfIterations = 0
@@ -52,8 +51,7 @@ def newton_raphson(poli, start_point, end_point, ep=0.0001):
     :param ep: the maximum calculation error.
     :return: a root of the polynomial in the given range if found one, otherwise returns None.
     """
-    print(
-        f'\nSearching in range: [{start_point},{end_point}] for polynomial: {poli}:')
+    # print(f'\nSearching in range: [{start_point},{end_point}] for polynomial: {poli}:')
     # initialize polynomial and derivative data.
     x = sp.symbols('x')
     f = lambdify(x, poli)
@@ -71,7 +69,8 @@ def newton_raphson(poli, start_point, end_point, ep=0.0001):
     # search for a root with Newton Raphson method
     while rootNotFound(xr, xrr, ep) and numOfIterations <= maxNumOfIterations:
         numOfIterations += 1
-        tempResults += f'iteration number {numOfIterations}:  prev guess: ' + str(xr) + '   curr guess: ' + str(xrr) + '\n'
+        tempResults += f'iteration number {numOfIterations}:  prev guess: ' + str(xr) + '   curr guess: ' + str(
+            xrr) + '\n'
         xr = xrr
         try:
             xrr = xr - (f(xr) / ftag(xr))
@@ -94,7 +93,7 @@ def secant_method(poli, start_point, end_point, ep=0.0001):
     :param ep: the maximum calculation error.
     :return: a root of the polynomial in the given range if found one, otherwise returns None.
     """
-    print(f'\nSearching in range: [{start_point},{end_point}] for polynomial: {poli}:')
+    # print(f'\nSearching in range: [{start_point},{end_point}] for polynomial: {poli}:')
     # initialize polynomial data.
     x = sp.symbols('x')
     f = lambdify(x, poli)
@@ -195,8 +194,7 @@ def main():
         '2': newton_raphson,
         '3': secant_method}
     # TODO: ↓ ENTER POLYNOMIAL HERE ↓.
-    p = x ** 6 - 3 * x ** 5 - 6 * x ** 4 + 10 * x ** 3 + 21 * x ** 2 + 9 * x
-    p = x**2 + 2*x - 4
+    p = x ** 3 - 6.77 * x ** 2 + 0.2024 * x + 39.961712
     # get range from user
     startpoint = float(input("enter the bottom limit\n"))
     endpoint = float(input("enter the upper limit\n"))
@@ -235,11 +233,11 @@ def main():
             # search for root on the mash boundaries by assignment of the boundary in the function, f(x)
             # check for the first x value in the mash
             if abs(f(mash[0][0])) <= epsilon:
-                solutions.add((mash[0][0], 0, 'no temp solutions'))
+                solutions.add((mash[0][0], 0, 'no temp solutions, '))
             # check for each x value in the mash
             for border in mash:
                 if abs(f(border[1])) <= epsilon:
-                    solutions.add((border[1], 0, 'no temp solutions'))
+                    solutions.add((border[1], 0, 'no temp solutions, '))
             solutions = list(solutions)
             printSolution(solutions)
     print("goodbye")
@@ -264,12 +262,13 @@ def printSolution(solutions):
     else:
         for solution in solutions:
             count += 1
-            string = "solution {0}:\ntemp solutions:\n{1}final solution: {2}, number of iterations for finding root: {3}\n".format(count, solution[2],
-                                                                                            solution[0], solution[1])
+            string = "solution {0}:\ntemp solutions:\n{1}final solution: {2}, number of iterations for finding root: {3}\n".format(
+                count, solution[2],
+                solution[0], solution[1])
             # if the number of iteration for finding the root is zero
             if solution[1] == 0:
                 # indicate the user it was found by assignment in the function
-                string += ', found by borders assignment in function'
+                string += 'found by borders assignment in function\n'
             print(string)
     print()
 
