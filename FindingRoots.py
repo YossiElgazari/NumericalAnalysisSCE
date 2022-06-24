@@ -3,7 +3,6 @@
 # Lior Silon ID
 
 import sympy as sp
-from sympy import ln, Float
 from sympy.utilities.lambdify import lambdify
 import math
 
@@ -22,7 +21,7 @@ def bisection_method(poli, start_point, end_point, ep=0.0001):
     f = lambdify(x, poli)
     numOfIterations = 0
     m = 0  # the root to return if found
-    maxNumOfIterations = math.ceil(-1 * (ln((ep / (end_point - start_point))) / ln(2)))
+    maxNumOfIterations = math.ceil(-1 * (sp.ln((ep / (end_point - start_point))) / sp.ln(2)))
     # search for a root with bisection method
     while rootNotFound(start_point, end_point, ep) and numOfIterations <= maxNumOfIterations:
         numOfIterations += 1
@@ -55,7 +54,7 @@ def newton_raphson(poli, start_point, end_point, ep=0.0001):
     ftag = poli.diff(x)
     ftag = lambdify(x, ftag)
     numOfIterations = 0
-    maxNumOfIterations = math.ceil(-1 * (ln(ep / (end_point - start_point)) / ln(2)))
+    maxNumOfIterations = math.ceil(-1 * (sp.ln(ep / (end_point - start_point)) / sp.ln(2)))
     xr = start_point
     try:
         xrr = xr - (f(xr) / ftag(xr))
@@ -74,7 +73,7 @@ def newton_raphson(poli, start_point, end_point, ep=0.0001):
     # if a root was not found
     if numOfIterations > maxNumOfIterations:
         return None, numOfIterations
-    return round(Float(str(xrr)), 5), numOfIterations
+    return round(sp.Float(str(xrr)), 5), numOfIterations
 
 
 def secant_method(poli, start_point, end_point, ep=0.0001):
@@ -91,7 +90,7 @@ def secant_method(poli, start_point, end_point, ep=0.0001):
     x = sp.symbols('x')
     f = lambdify(x, poli)
     numOfIterations = 0
-    maxNumOfIterations = math.ceil(-1 * (ln(ep / (end_point - start_point)) / ln(2)))
+    maxNumOfIterations = math.ceil(-1 * (sp.ln(ep / (end_point - start_point)) / sp.ln(2)))
     xr = start_point
     xrr = end_point
     xrrr = (xr * f(xrr) - xrr * f(xr)) / (f(xrr) - f(xr))
@@ -108,7 +107,7 @@ def secant_method(poli, start_point, end_point, ep=0.0001):
     # if a root was not found
     if numOfIterations > maxNumOfIterations:
         return None, numOfIterations
-    return round(Float(str(xrrr)), 5), numOfIterations
+    return round(sp.Float(str(xrrr)), 5), numOfIterations
 
 
 def rootNotFound(start_point, end_point, epsilon):
