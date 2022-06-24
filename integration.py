@@ -1,5 +1,4 @@
 import math
-
 import sympy as sp
 
 
@@ -111,7 +110,7 @@ def sympsonMethod(leftBoundary, rightBoundary, polynomial, numofsection):
 def main():
     x = sp.symbols('x')
     # TODO: ↓ ENTER FUNCTION HERE ↓.
-    f = sp.cos((2*x**3)+(5*x**2)-6)/(2*math.e**(-2*x))
+    f = sp.cos((2 * x ** 3) + (5 * x ** 2) - 6) / (2 * math.e ** (-2 * x))
     # get boundaries from user
     leftb = float(input("enter the left boundary: "))
     rightb = float(input("enter the right boundary: "))
@@ -131,5 +130,6 @@ def main():
         else:
             print("Wrong choice, try again.")
     print("GoodBye.")
+
 
 main()
