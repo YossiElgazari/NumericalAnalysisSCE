@@ -1,5 +1,5 @@
 '''
-Script produces line by the least square method from a given set of xy-coordinates
+ produces line by the least square method from a given set of xy-coordinates
 '''
 
 import matplotlib.pyplot as plt
