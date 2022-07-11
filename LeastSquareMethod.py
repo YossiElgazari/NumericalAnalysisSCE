@@ -2,6 +2,7 @@
  produces line by the least square method from a given set of xy-coordinates
 '''
 
+#TODO - install matplotlib package to fully enjoy the program.
 import matplotlib.pyplot as plt
 import sys
 
