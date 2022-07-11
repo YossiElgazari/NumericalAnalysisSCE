@@ -121,6 +121,7 @@ def point_parse(a):
 def main():
     a = sys.argv[1:]
     temp_points = []
+    # TODO - Replace p data for another solution as you wish, [[x1,y1],[x2,y2],...,[xn,yn]]
     p = [[0, 1], [3, 2], [5, 8]]
     for i in range(len(p)):
         temp_x, temp_y = p[i][0], p[i][1]
