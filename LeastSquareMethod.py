@@ -1,15 +1,22 @@
 '''
 Script produces line by the least square method from a given set of xy-coordinates
-Project created by Parth Paradkar and Sarthak Johnson Prasad
-https://github.com/parthmax99/LeastSquareMethod
-
 '''
 
 import matplotlib.pyplot as plt
 import sys
 
 
-class Point():
+def location(c, scale):
+    temp = c
+    prev = 0
+    while temp >= 10 * scale:
+        temp = temp - 10 * scale
+    prev = c - temp
+    line = temp / scale
+    return prev, int(round(line))
+
+
+class Point:
     # scale in units/mm
     x_scale = 0.1
     y_scale = 0.1
@@ -17,32 +24,22 @@ class Point():
     def __init__(self, x, y):
         self.x = x
         self.y = y
-        self.x_prev, self.x_line = self.location(x, self.x_scale)
-        self.y_prev, self.y_line = self.location(y, self.y_scale)
+        self.x_prev, self.x_line = location(x, self.x_scale)
+        self.y_prev, self.y_line = location(y, self.y_scale)
 
     def __str__(self):
-        return ('(' + str(self.x) + ',' + str(self.y) + ')')
+        return '(' + str(self.x) + ',' + str(self.y) + ')'
 
     def __repr__(self):
-        return ('(' + str(self.x) + ',' + str(self.y) + ')')
+        return '(' + str(self.x) + ',' + str(self.y) + ')'
 
     @classmethod
-    def set_scales(self, x_scale_in, y_scale_in):
-        self.x_scale = x_scale_in
-        self.y_scale = y_scale_in
-
-    def location(self, c, scale):
-        temp = c
-        prev = 0
-        while temp >= 10 * scale:
-            temp = temp - 10 * scale
-
-        prev = c - temp
-        line = temp / scale
-        return prev, int(round(line))
+    def set_scales(cls, x_scale_in, y_scale_in):
+        cls.x_scale = x_scale_in
+        cls.y_scale = y_scale_in
 
 
-class Pointset():
+class Pointset:
     def __init__(self, point_list):
         self.str_point_list = point_list
         self.n = len(point_list)
@@ -116,8 +113,7 @@ def point_parse(a):
     temp_x, temp_y = temp.split(',')
     try:
         return Point(int(temp_x), int(temp_y))
-
-    except:
+    except ValueError:
         return Point(float(temp_x), float(temp_y))
 
 
