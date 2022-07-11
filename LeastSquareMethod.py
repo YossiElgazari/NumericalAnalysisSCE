@@ -2,9 +2,11 @@
  produces line by the least square method from a given set of xy-coordinates
 '''
 
-#TODO - install matplotlib package to fully enjoy the program.
+# TODO - install matplotlib package to fully enjoy the program.
 import matplotlib.pyplot as plt
 import sys
+from Interpolation import print_matrix
+from gaussElimination import gaussElimination
 
 
 def location(c, scale):
@@ -43,8 +45,6 @@ class Point:
         self.x = x
         self.y = y
         self.x_prev, self.x_line = location(x, self.x_scale)
-        print(self.x_prev)
-        print(self.x_line, "\n\n")
         self.y_prev, self.y_line = location(y, self.y_scale)
 
     def __str__(self):
@@ -213,6 +213,18 @@ def point_parse(a):
         return Point(float(temp_x), float(temp_y))
 
 
+def printMatrix(point_set: Pointset):
+    a11 = point_set.sum_squared
+    a12 = sum(point_set.x_list)
+    a21 = a12
+    a22 = point_set.n
+    sol1 = point_set.sum_prod
+    sol2 = sum(point_set.y_list)
+    matrix = [[a11, a12, sol1], [a21, a22, sol2]]
+    print_matrix(matrix)
+    print_matrix(gaussElimination(matrix))
+
+
 def main():
     a = sys.argv[1:]
     # List that store all the points we ran on so far in thw while loop
@@ -227,6 +239,7 @@ def main():
         temp_points.append(('({},{})'.format(temp_x, temp_y)))
     # Initialize a PointSet with the temp points
     points = Pointset(temp_points)
+    printMatrix(point_set=points)
     # Initialize the best line fit corresponding to the point set, y = m*x +n
     line = 'y = ({}) x + ({})'.format(round(points.calc_m, 3), round(points.calc_c, 3))
     # Visualize the results
