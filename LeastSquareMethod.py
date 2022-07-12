@@ -11,7 +11,6 @@ from gaussElimination import gaussElimination
 
 def location(c, scale):
     """
-
     :param c: x value of a point
     :param scale: Int, 0.1
     :return: Tuple
@@ -49,12 +48,14 @@ class Point:
 
     def __str__(self):
         """
-
-        :return: String representation of  a point i.e: (1,2)
+        :return: representation of  a point i.e: (1,2)
         """
         return '(' + str(self.x) + ',' + str(self.y) + ')'
 
     def __repr__(self):
+        """
+        :return: representation of  a point i.e: (1,2)
+        """
         return '(' + str(self.x) + ',' + str(self.y) + ')'
 
     @classmethod
@@ -105,7 +106,6 @@ class Pointset:
 
     def __str__(self):
         """
-
         :return: String representation of the object, i.e: [(1,2), (3,4), ...]
         """
         return str(self.str_point_list)
@@ -116,7 +116,6 @@ class Pointset:
     @property
     def points_mean(self):
         """
-
         :return: Point (x,y), x is the average value of all the X's in the points list, same goes for y.
         """
         tot_x = 0
@@ -133,7 +132,6 @@ class Pointset:
     @property
     def sum_squared(self):
         """
-
         :return: Float, representing the sum of x^2 for every x value in the points list
         """
         tot = 0
@@ -145,7 +143,6 @@ class Pointset:
     @property
     def sum_prod(self):
         """
-
         :return: Float, representing the sum of x*y for every point in the points list
         """
         tot = 0
@@ -156,7 +153,6 @@ class Pointset:
     @property
     def calc_m(self):
         """
-
         :return: Float, The incline of the final line(the m of : y = m*x + c)
         """
         # ( sum(Xi * Yi) - (size * x_average * y_average) ) / ( sum(Xi^2) - (size * x_average * x_average) )
@@ -166,7 +162,6 @@ class Pointset:
     @property
     def calc_c(self):
         """
-
         :return: Float, The intersection with the y-axis of the final line(the c of : y = m*x + c)
         """
         # ( (y_average * sum(Xi^2)) - (x_average * sum(Xi * Yi)) ) / ( sum(Xi^2) - (size * x_average * x_average) )
@@ -176,7 +171,6 @@ class Pointset:
     @property
     def y_new_list(self):
         """
-
         :return: List, containing all the new y values for all the x values in the x list, so the best line will
         go through those points.
         """
@@ -214,6 +208,11 @@ def point_parse(a):
 
 
 def printMatrix(point_set: Pointset):
+    """
+    prints the steps to solution
+
+    :param point_set: points
+    """
     a11 = point_set.sum_squared
     a12 = sum(point_set.x_list)
     a21 = a12
@@ -221,11 +220,13 @@ def printMatrix(point_set: Pointset):
     sol1 = point_set.sum_prod
     sol2 = sum(point_set.y_list)
     matrix = [[a11, a12, sol1], [a21, a22, sol2]]
-    print_matrix(matrix)
     print_matrix(gaussElimination(matrix))
 
 
 def main():
+    """
+    main function gathers all information and annotates the solution
+    """
     a = sys.argv[1:]
     # List that store all the points we ran on so far in thw while loop
     temp_points = []
