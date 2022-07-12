@@ -220,6 +220,8 @@ def printMatrix(point_set: Pointset):
     sol1 = point_set.sum_prod
     sol2 = sum(point_set.y_list)
     matrix = [[a11, a12, sol1], [a21, a22, sol2]]
+    print("matrix to solve:")
+    print_matrix(matrix)
     print_matrix(gaussElimination(matrix))
 
 
